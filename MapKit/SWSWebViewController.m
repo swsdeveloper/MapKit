@@ -16,19 +16,17 @@
     _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview: _webView];
-    
+    NSLog(@"_webView did load");
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"in web viewWillAppear");
     [super viewWillAppear:animated];
     [self loadRequestFromURL:self.url];
+    NSLog(@"_webView will appear");
 }
-
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//}
 
 - (void)viewDidDisappear:(BOOL)animated{
     NSLog(@"in web viewDidDisappear");
@@ -42,11 +40,6 @@
     self.urlRequest = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:self.urlRequest];
 }
-
-//- (void)didReceiveMemoryWarning {
-//    [super didReceiveMemoryWarning];
-//    // Dispose of any resources that can be recreated.
-//}
 
 
 #pragma mark - UIWebView Delegate methods
@@ -69,4 +62,5 @@
     NSLog(@"in web didFailLoadWithError: %@", [error description]);
     [webView stopLoading];
 }
+
 @end

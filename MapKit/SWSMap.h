@@ -12,7 +12,7 @@
 
 @interface SWSMap : MKMapView <MKAnnotation, MKMapViewDelegate, UIPopoverControllerDelegate>
 
-@property (weak, nonatomic) UIViewController *viewController;
+@property (strong, nonatomic) UIViewController *viewController;
 
 @property (assign, nonatomic) MKCoordinateSpan span;        // struct consisting of 2 CLLocationDegrees (latitudeDelta and longitudeDelta)
 
@@ -20,7 +20,7 @@
 
 @property (copy, nonatomic) MKMapCamera *camera;
 
-@property (readonly, nonatomic) CLLocationCoordinate2D coordinate;  // If this is read only, why was it necc. to write a Setter for this? (see: setCoordinate)
+@property (readonly, nonatomic) CLLocationCoordinate2D coordinate;
 
 @property (nonatomic) CGSize popoverContentSize;
 
@@ -33,5 +33,7 @@
 - (void)setCameraToLookAtLocation:(CLLocationCoordinate2D)atLocation fromLocation:(CLLocationCoordinate2D)fromLocation andAltitudeInMeters:(CLLocationDistance)altitude;
                                                                                                                   // for Satellite map type (and Hybrid)
 - (void)setMapRegionToSpanLocation:(CLLocationCoordinate2D)location;
+
+- (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
 
 @end

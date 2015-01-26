@@ -11,6 +11,7 @@
 #import "SWSLocationManager.h"
 #import "MyUtil.h"
 #import "SWSWebViewController.h"
+#import <AddressBook/AddressBook.h>
 
 
 @implementation SWSMap
@@ -18,8 +19,8 @@
 - (id)initForViewController:(UIViewController *)viewController {
     self = [super init];
     if (self) {
-        _viewController = viewController;
         self = [[SWSMap alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        _viewController = viewController;
         }
     return self;
 }
@@ -182,11 +183,16 @@
             UIImage *icon = [UIImage imageNamed:@"TTTLogo.png"];
             UIImage *resizedIcon = [MyUtil imageWithImage:icon scaledToSize:CGSizeMake((icon.size.width/2.0),(icon.size.height/2.0))];
             UIImageView *iconView = [[UIImageView alloc] initWithImage:resizedIcon];
-            pinAnnotationView.leftCalloutAccessoryView = iconView;
+            UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            imageButton.frame = [iconView frame];
+            [imageButton setImage:resizedIcon forState:UIControlStateNormal];
+            pinAnnotationView.leftCalloutAccessoryView = imageButton;
+            pinAnnotationView.leftCalloutAccessoryView.tag = 1;
             
             // Add disclosure button to the right callout.
             UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             pinAnnotationView.rightCalloutAccessoryView = disclosureButton;
+            pinAnnotationView.rightCalloutAccessoryView.tag = 2;
             
         } else {
             pinAnnotationView.annotation = annotation;
@@ -194,17 +200,23 @@
         return pinAnnotationView;
         
     } else if ([reuseID isEqualToString:@"Draggable Pin"]) {
-            if(!pinAnnotationView){
-                pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseID];
-                pinAnnotationView.pinColor = MKPinAnnotationColorRed;
-                pinAnnotationView.animatesDrop = NO;
-                pinAnnotationView.draggable = YES;
-                pinAnnotationView.enabled = YES;
-                pinAnnotationView.canShowCallout = YES;
-            } else {
-                pinAnnotationView.annotation = annotation;
-            }
-            return pinAnnotationView;
+        if(!pinAnnotationView){
+            pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseID];
+            pinAnnotationView.pinColor = MKPinAnnotationColorPurple;
+            pinAnnotationView.animatesDrop = NO;
+            pinAnnotationView.draggable = YES;
+            pinAnnotationView.enabled = YES;
+            pinAnnotationView.canShowCallout = YES;
+            
+            // Add disclosure button to the right callout.
+            UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            pinAnnotationView.rightCalloutAccessoryView = disclosureButton;
+            pinAnnotationView.rightCalloutAccessoryView.tag = 3;
+            
+        } else {
+            pinAnnotationView.annotation = annotation;
+        }
+        return pinAnnotationView;
 
     }
     return nil;
@@ -223,18 +235,58 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     if (MYDEBUG) { NSLog(@"Now in: mapView:annotationView:calloutAccessoryControlTapped"); }
     
-    SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
-    webViewController.url = [NSURL URLWithString:@"http://turntotech.io"];
+    if ([control tag] == 1) {
+        NSLog(@"Left accessory of TTT annotation tapped");
         
-    UIPopoverController *popOverController = [[UIPopoverController alloc] initWithContentViewController:webViewController];
-    popOverController.delegate = self;
-    double offset = 15.0;
-    CGRect popOverRect = CGRectMake(self.frame.origin.x + offset,
-                                    self.frame.origin.y + offset,
-                                    self.frame.size.width - (2*offset),
-                                    self.frame.size.height - (2*offset));
-    [popOverController presentPopoverFromRect:popOverRect inView:self permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//    [popOverController setPopoverContentSize:CGSizeMake(600.0, 1200.0)];    // max width = 600.0
+        BOOL wordFound = [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:@"apple"];
+        wordFound = YES;
+        if (wordFound) {
+            UIReferenceLibraryViewController *referenceLibraryViewController = [[UIReferenceLibraryViewController alloc] initWithTerm:@"apple"];
+            
+            UIPopoverController *popOverController = [[UIPopoverController alloc] initWithContentViewController:referenceLibraryViewController];
+            popOverController.delegate = self;
+            double offset = 15.0;
+            CGRect popOverRect = CGRectMake(self.frame.origin.x + offset,
+                                            self.frame.origin.y + offset,
+                                            self.frame.size.width - (2*offset),
+                                            self.frame.size.height - (2*offset));
+            [popOverController presentPopoverFromRect:popOverRect inView:self permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            
+            //    [popOverController setPopoverContentSize:CGSizeMake(600.0, 1200.0)];    // max width = 600.0
+            
+        } else {
+            NSLog(@"No defintion for \"apple\" (or no dictionary on this device)");
+        }
+        
+    } else if ([control tag] == 2) {
+        NSLog(@"Right accessory of TTT annotation tapped");
+        
+        SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
+        webViewController.url = [NSURL URLWithString:@"http://turntotech.io"];
+        
+        [[self.viewController navigationController] pushViewController:webViewController animated:YES];
+        
+    } else {
+        NSLog(@"Right accessory of Draggable Pin annotation tapped");
+        
+        id <MKAnnotation> annotation = view.annotation;
+        
+        NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
+        
+        NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : annotation.subtitle};
+        
+        MKPlacemark *draggablePinPlacemark = [[MKPlacemark alloc]
+                                            initWithCoordinate:annotation.coordinate
+                                            addressDictionary:addressDict];
+        
+        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:draggablePinPlacemark];
+        mapItem.name = annotation.title;
+        
+        // The next statement launches Apple's maps app to show directions between the Draggable Pin and the user's Current Location.
+        // Unfortunately, there is no way for the user to navigate back to this app
+        
+        [mapItem openInMapsWithLaunchOptions:launchOptions];
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {

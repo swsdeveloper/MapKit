@@ -7,20 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
+		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
+		0A9C96A81A76B85A00AABA37 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A71A76B85A00AABA37 /* UIKit.framework */; };
 		0AB420161A6ED1F20078F5F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420151A6ED1F20078F5F3 /* main.m */; };
 		0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420181A6ED1F20078F5F3 /* SWSAppDelegate.m */; };
 		0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4201B1A6ED1F20078F5F3 /* SWSViewController.m */; };
 		0AB420211A6ED1F20078F5F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AB420201A6ED1F20078F5F3 /* Images.xcassets */; };
 		0AB420301A6ED1F20078F5F3 /* MapKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4202F1A6ED1F20078F5F3 /* MapKitTests.m */; };
 		0AB4203A1A6ED3BF0078F5F3 /* MapKit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AB420391A6ED3BF0078F5F3 /* MapKit.xib */; };
-		0AB4203C1A6ED6650078F5F3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB4203B1A6ED6650078F5F3 /* CoreLocation.framework */; };
-		0AB4203E1A6ED6740078F5F3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB4203D1A6ED6740078F5F3 /* MapKit.framework */; };
-		0AB420411A6ED8B70078F5F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB420401A6ED8B70078F5F3 /* UIKit.framework */; };
 		0AC610C11A6EE87800CB1F14 /* TTTLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AC610C01A6EE87800CB1F14 /* TTTLogo.png */; };
 		0AC610FB1A70376400CB1F14 /* SWSLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC610FA1A70376400CB1F14 /* SWSLocationManager.m */; };
 		0AC610FE1A70490E00CB1F14 /* SWSMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC610FD1A70490E00CB1F14 /* SWSMap.m */; };
 		0AC611011A7190A900CB1F14 /* MyUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC611001A7190A900CB1F14 /* MyUtil.m */; };
 		0AC611041A7199BD00CB1F14 /* SWSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC611031A7199BD00CB1F14 /* SWSWebViewController.m */; };
+		0AC611791A75AA0800CB1F14 /* SWSGeocodedAnnotations.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC611781A75AA0800CB1F14 /* SWSGeocodedAnnotations.m */; };
+		0AC6117C1A75B8BA00CB1F14 /* SWSAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6117B1A75B8BA00CB1F14 /* SWSAnnotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0A9C96A71A76B85A00AABA37 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AB420101A6ED1F20078F5F3 /* MapKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AB420141A6ED1F20078F5F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AB420151A6ED1F20078F5F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -46,9 +51,6 @@
 		0AB4202E1A6ED1F20078F5F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AB4202F1A6ED1F20078F5F3 /* MapKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapKitTests.m; sourceTree = "<group>"; };
 		0AB420391A6ED3BF0078F5F3 /* MapKit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapKit.xib; sourceTree = "<group>"; };
-		0AB4203B1A6ED6650078F5F3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		0AB4203D1A6ED6740078F5F3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		0AB420401A6ED8B70078F5F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AC610C01A6EE87800CB1F14 /* TTTLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TTTLogo.png; sourceTree = "<group>"; };
 		0AC610C21A6EFAE800CB1F14 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		0AC610F91A70376400CB1F14 /* SWSLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSLocationManager.h; sourceTree = "<group>"; };
@@ -59,6 +61,10 @@
 		0AC611001A7190A900CB1F14 /* MyUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUtil.m; sourceTree = "<group>"; };
 		0AC611021A7199BD00CB1F14 /* SWSWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSWebViewController.h; sourceTree = "<group>"; };
 		0AC611031A7199BD00CB1F14 /* SWSWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSWebViewController.m; sourceTree = "<group>"; };
+		0AC611771A75AA0800CB1F14 /* SWSGeocodedAnnotations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSGeocodedAnnotations.h; sourceTree = "<group>"; };
+		0AC611781A75AA0800CB1F14 /* SWSGeocodedAnnotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSGeocodedAnnotations.m; sourceTree = "<group>"; };
+		0AC6117A1A75B8BA00CB1F14 /* SWSAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSAnnotation.h; sourceTree = "<group>"; };
+		0AC6117B1A75B8BA00CB1F14 /* SWSAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSAnnotation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,9 +72,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AB420411A6ED8B70078F5F3 /* UIKit.framework in Frameworks */,
-				0AB4203E1A6ED6740078F5F3 /* MapKit.framework in Frameworks */,
-				0AB4203C1A6ED6650078F5F3 /* CoreLocation.framework in Frameworks */,
+				0A9C96A81A76B85A00AABA37 /* UIKit.framework in Frameworks */,
+				0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */,
+				0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +121,10 @@
 				0AC610FA1A70376400CB1F14 /* SWSLocationManager.m */,
 				0AC611021A7199BD00CB1F14 /* SWSWebViewController.h */,
 				0AC611031A7199BD00CB1F14 /* SWSWebViewController.m */,
+				0AC611771A75AA0800CB1F14 /* SWSGeocodedAnnotations.h */,
+				0AC611781A75AA0800CB1F14 /* SWSGeocodedAnnotations.m */,
+				0AC6117A1A75B8BA00CB1F14 /* SWSAnnotation.h */,
+				0AC6117B1A75B8BA00CB1F14 /* SWSAnnotation.m */,
 				0AC610FF1A7190A900CB1F14 /* MyUtil.h */,
 				0AC611001A7190A900CB1F14 /* MyUtil.m */,
 				0AB420201A6ED1F20078F5F3 /* Images.xcassets */,
@@ -154,9 +164,9 @@
 		0AB4203F1A6ED6820078F5F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0AB420401A6ED8B70078F5F3 /* UIKit.framework */,
-				0AB4203D1A6ED6740078F5F3 /* MapKit.framework */,
-				0AB4203B1A6ED6650078F5F3 /* CoreLocation.framework */,
+				0A9C96A51A76B85400AABA37 /* CoreLocation.framework */,
+				0A9C96A31A76B7F300AABA37 /* MapKit.framework */,
+				0A9C96A71A76B85A00AABA37 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -262,8 +272,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */,
+				0AC611791A75AA0800CB1F14 /* SWSGeocodedAnnotations.m in Sources */,
 				0AC610FE1A70490E00CB1F14 /* SWSMap.m in Sources */,
 				0AC610FB1A70376400CB1F14 /* SWSLocationManager.m in Sources */,
+				0AC6117C1A75B8BA00CB1F14 /* SWSAnnotation.m in Sources */,
 				0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */,
 				0AB420161A6ED1F20078F5F3 /* main.m in Sources */,
 				0AC611041A7199BD00CB1F14 /* SWSWebViewController.m in Sources */,

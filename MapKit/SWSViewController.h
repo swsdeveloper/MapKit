@@ -24,5 +24,9 @@
 
 @property (strong, nonatomic) MKPinAnnotationView *annotationView;
 
+@property (strong, nonatomic) NSDictionary *restaurants;
+
+//@property (readonly, nonatomic) CLLocationCoordinate2D coordinate;
+
 @end
 
