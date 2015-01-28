@@ -271,22 +271,69 @@
         
         id <MKAnnotation> annotation = view.annotation;
         
-        NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
-        
         NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : annotation.subtitle};
         
         MKPlacemark *draggablePinPlacemark = [[MKPlacemark alloc]
                                             initWithCoordinate:annotation.coordinate
                                             addressDictionary:addressDict];
         
-        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:draggablePinPlacemark];
-        mapItem.name = annotation.title;
+        self.draggablePinMapItem = [[MKMapItem alloc] initWithPlacemark:draggablePinPlacemark];
+        self.draggablePinMapItem.name = annotation.title;
         
         // The next statement launches Apple's maps app to show directions between the Draggable Pin and the user's Current Location.
         // Unfortunately, there is no way for the user to navigate back to this app
         
-        [mapItem openInMapsWithLaunchOptions:launchOptions];
+        // NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
+        
+        // [draggablePinMapItem openInMapsWithLaunchOptions:launchOptions];
+        
+        // Create a Direction Request - from current user location to current location of draggable pin
+
+        [self showRouteTo:self.draggablePinMapItem];
     }
+}
+
+- (void)showRouteTo:(MKMapItem *)destItem {
+    // Create a Direction Request - from current user location to current location of draggable pin
+    // Before doing so, remove any polyline overlay that may have previously been shown
+    
+    for (id<MKOverlay> overlayToRemove in self.overlays) {
+        if ([overlayToRemove isKindOfClass:[MKPolyline class]]) {
+            [self removeOverlay:overlayToRemove];
+        }
+    }
+    
+    if (!self.transportType) {
+        self.transportType = MKDirectionsTransportTypeAutomobile;
+    }
+    
+    MKDirectionsRequest *directionsRequest = [[MKDirectionsRequest alloc] init];
+    [directionsRequest setSource:[MKMapItem mapItemForCurrentLocation]];
+    [directionsRequest setDestination:destItem];
+    [directionsRequest setTransportType:self.transportType];
+    
+    MKDirections *directions = [[MKDirections alloc] initWithRequest:directionsRequest];
+    MKMapView *myMapView = self;    // Not wise to reference self inside a block
+    [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
+        if (!error) {
+            for (MKRoute *route in [response routes]) {
+                [myMapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads]; // Draws the route above roads, but below labels.
+                                                                                        // The |polyline| method returns the geometric route
+            }
+        }
+    }];
+}
+
+// This next method is necessary for an overlay to be displayed
+
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
+        [renderer setStrokeColor:[UIColor blueColor]];
+        [renderer setLineWidth:5.0];
+        return renderer;
+    }
+    return nil;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
@@ -297,8 +344,29 @@
     if (MYDEBUG) { NSLog(@"Now in: mapView:didDeselectAnnotationView"); }
 }
 
+// This gets called as Draggable Pin gets dragged
+
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
     if (MYDEBUG) { NSLog(@"Now in: mapView:annotationView:didChangeDragState:fromOldState"); }
+    if (newState == MKAnnotationViewDragStateEnding) {
+        self.droppedAt = view.annotation.coordinate;
+        NSLog(@"Pin dropped at %f,%f", self.droppedAt.latitude, self.droppedAt.longitude);
+        
+        NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : @""};
+        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:self.droppedAt addressDictionary:addressDict];
+        self.draggablePinMapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
+        self.draggablePinMapItem.name = @"Draggable Pin";
+        
+        [self showRouteTo:self.draggablePinMapItem];
+    }
+    
+// The following code degrades the ability to drag the pin:
+//    if (newState == MKAnnotationViewDragStateStarting) {
+//        view.dragState = MKAnnotationViewDragStateDragging;
+//    } else if (newState == MKAnnotationViewDragStateEnding || newState == MKAnnotationViewDragStateCanceling) {
+//        view.dragState = MKAnnotationViewDragStateNone;
+//    }
+    
 }
 
 // This method is required for the MKAnnotation Protocol

@@ -1,0 +1,44 @@
+/*
+
+sshatzdeveloper@gmail.com
+
+Yelp API v2.0
+
+Consumer Key	Acn5PAR7TFoFjXnUqEdQHg
+
+Consumer Secret	41sRKT85ZkL2oOyvleJZHAoL1cQ
+
+Token	ulRNfIh-MRZFOY24SXsrmB2OP7doDoHQ
+
+Token Secret	GWgS8vOympjik_6yVNKKcH3bjwc
+
+-------------------------------------------------------------
+
+Yelp API v1.0 -- deprecated
+
+YWSID
+
+Key	MvXDYeVNsAI749QOHnl44g
+
+-------------------------------------------------------------
+
+Yelp uses OAuth 1.0a for authenticating API requests as per the OAuth specification (Accessing Protected Resources).
+
+Making a Request
+Each request must contain the following OAuth protocol parameters:
+
+OAuth Parameter	Value:
+- oauth_consumer_key	Your OAuth consumer key (from Manage API Access).
+- oauth_token           The access token obtained (from Manage API Access).
+- oauth_signature_method	hmac-sha1
+- oauth_signature       The generated request signature, signed with the oauth_token_secret obtained (from Manage API Access).
+- oauth_timestamp       Timestamp for the request in seconds since the Unix epoch.
+- oauth_nonce           A unique string randomly generated per request.
+
+These parameters may be passed in the HTTP (Authorization) header as URL query keys or in the POST data. Generating the OAuth signature is done by applying the HMAC-SHA1 with the oauth_token_secret. You may view your OAuth consumer key at Manage API Access. OAuth libraries are available to generate these requests.
+
+-------------------------------------------------------------
+
+
+
+*/

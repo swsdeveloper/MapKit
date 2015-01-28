@@ -24,6 +24,12 @@
 
 @property (nonatomic) CGSize popoverContentSize;
 
+@property (assign, nonatomic) MKDirectionsTransportType transportType;
+
+@property (strong, nonatomic) MKMapItem *draggablePinMapItem;
+
+@property (assign, nonatomic) CLLocationCoordinate2D droppedAt;
+
 - (id)initForViewController:(UIViewController *)viewController;
 
 - (void)setMapDefaults;
@@ -35,5 +41,7 @@
 - (void)setMapRegionToSpanLocation:(CLLocationCoordinate2D)location;
 
 - (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
+
+- (void)showRouteTo:(MKMapItem *)destItem;
 
 @end

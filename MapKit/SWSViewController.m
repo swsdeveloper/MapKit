@@ -71,6 +71,16 @@
     
     [self.map addAnnotation:self.draggableAnnotation];
     
+    self.map.droppedAt = self.draggableAnnotation.coordinate;
+    
+    // Placemarks
+    
+    //[self dropSamplePlacemarks];
+    
+}
+
+- (void)dropSamplePlacemarks {
+    
     // Placemarks - use geocoding to convert full or partial addresses into latitudes/longitudes
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -82,7 +92,7 @@
     if (!annotationsObject || [annotationsObject.geocodedAnnotationsArray count] < 1) {
         
         NSMutableArray *newAnnotationsArray = [[NSMutableArray alloc] init];
-    
+        
         self.restaurants = @{
                              @"ABC Kitchen":@"35 E 18th St, Flatiron, New York, NY 10003",
                              @"Bite":@"211 E 14th St, Gramercy, New York, NY 10003",
@@ -96,7 +106,7 @@
                              @"Taim" : @"222 Waverly Pl, West Village, New York, NY 10014",
                              @"Woorijip Authentic Korean Food" : @"12 W 32nd St, Midtown West, New York, NY 10001"
                              };
-
+        
         for (id restaurantName in self.restaurants) {
             
             NSLog(@"Geocode request invoked for %@", restaurantName);
@@ -134,15 +144,12 @@
             }];
         }
     } else {
-        
         NSLog(@"Using previously saved user defaults for geocoded annotations");
-        
         for (id annotation in annotationsObject.geocodedAnnotationsArray) {
             [_map addAnnotation:annotation];
         }
-        
     }
-    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -164,6 +171,20 @@
         default:
             break;
     }
+}
+
+- (IBAction)setTransportationType:(id)sender {
+    switch (((UISegmentedControl *)sender).selectedSegmentIndex) {
+        case 0:
+            self.map.transportType = MKDirectionsTransportTypeAutomobile;
+            break;
+        case 1:
+            self.map.transportType = MKDirectionsTransportTypeWalking;
+            break;
+        default:
+            break;
+    }
+    [self.map showRouteTo:self.map.draggablePinMapItem];
 }
 
 @end
