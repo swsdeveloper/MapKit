@@ -10,7 +10,6 @@
 		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
 		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
 		0A9C96A81A76B85A00AABA37 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A71A76B85A00AABA37 /* UIKit.framework */; };
-		0AA8F0551A79493C003F83F4 /* Yelp Info in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8F0541A79493C003F83F4 /* Yelp Info */; };
 		0AB420161A6ED1F20078F5F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420151A6ED1F20078F5F3 /* main.m */; };
 		0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420181A6ED1F20078F5F3 /* SWSAppDelegate.m */; };
 		0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4201B1A6ED1F20078F5F3 /* SWSViewController.m */; };
@@ -40,7 +39,6 @@
 		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0A9C96A71A76B85A00AABA37 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0AA8F0541A79493C003F83F4 /* Yelp Info */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Yelp Info"; sourceTree = "<group>"; };
 		0AB420101A6ED1F20078F5F3 /* MapKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AB420141A6ED1F20078F5F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AB420151A6ED1F20078F5F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 				0AC610FA1A70376400CB1F14 /* SWSLocationManager.m */,
 				0AC611021A7199BD00CB1F14 /* SWSWebViewController.h */,
 				0AC611031A7199BD00CB1F14 /* SWSWebViewController.m */,
-				0AA8F0541A79493C003F83F4 /* Yelp Info */,
 				0AC611771A75AA0800CB1F14 /* SWSGeocodedAnnotations.h */,
 				0AC611781A75AA0800CB1F14 /* SWSGeocodedAnnotations.m */,
 				0AC6117A1A75B8BA00CB1F14 /* SWSAnnotation.h */,
@@ -258,7 +255,6 @@
 				0AB420211A6ED1F20078F5F3 /* Images.xcassets in Resources */,
 				0AB4203A1A6ED3BF0078F5F3 /* MapKit.xib in Resources */,
 				0AC610C11A6EE87800CB1F14 /* TTTLogo.png in Resources */,
-				0AA8F0551A79493C003F83F4 /* Yelp Info in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
