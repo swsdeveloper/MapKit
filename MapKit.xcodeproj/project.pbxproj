@@ -7,15 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A472E6F1A8012B9009860C2 /* SWSPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A472E6E1A8012B9009860C2 /* SWSPlace.m */; };
 		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
 		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
-		0A9C96A81A76B85A00AABA37 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A71A76B85A00AABA37 /* UIKit.framework */; };
+		0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */; };
+		0AA8F0A21A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F0A11A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m */; };
+		0AA8F0A51A7B52EE003F83F4 /* SWSAnnotationWithImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F0A41A7B52EE003F83F4 /* SWSAnnotationWithImage.m */; };
 		0AB420161A6ED1F20078F5F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420151A6ED1F20078F5F3 /* main.m */; };
 		0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB420181A6ED1F20078F5F3 /* SWSAppDelegate.m */; };
 		0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4201B1A6ED1F20078F5F3 /* SWSViewController.m */; };
 		0AB420211A6ED1F20078F5F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AB420201A6ED1F20078F5F3 /* Images.xcassets */; };
 		0AB420301A6ED1F20078F5F3 /* MapKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB4202F1A6ED1F20078F5F3 /* MapKitTests.m */; };
 		0AB4203A1A6ED3BF0078F5F3 /* MapKit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AB420391A6ED3BF0078F5F3 /* MapKit.xib */; };
+		0AB9F8AC1A7B58B300A75FAD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB9F8AB1A7B58B300A75FAD /* UIKit.framework */; };
 		0AC610C11A6EE87800CB1F14 /* TTTLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AC610C01A6EE87800CB1F14 /* TTTLogo.png */; };
 		0AC610FB1A70376400CB1F14 /* SWSLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC610FA1A70376400CB1F14 /* SWSLocationManager.m */; };
 		0AC610FE1A70490E00CB1F14 /* SWSMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC610FD1A70490E00CB1F14 /* SWSMap.m */; };
@@ -36,9 +40,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A472E6D1A8012B9009860C2 /* SWSPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSPlace.h; sourceTree = "<group>"; };
+		0A472E6E1A8012B9009860C2 /* SWSPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSPlace.m; sourceTree = "<group>"; };
 		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		0A9C96A71A76B85A00AABA37 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FindSubstringCategory.h"; sourceTree = "<group>"; };
+		0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FindSubstringCategory.m"; sourceTree = "<group>"; };
+		0AA8F0A01A7AF915003F83F4 /* NSObject+BVJSONStringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+BVJSONStringCategory.h"; sourceTree = "<group>"; };
+		0AA8F0A11A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+BVJSONStringCategory.m"; sourceTree = "<group>"; };
+		0AA8F0A31A7B52EE003F83F4 /* SWSAnnotationWithImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSAnnotationWithImage.h; sourceTree = "<group>"; };
+		0AA8F0A41A7B52EE003F83F4 /* SWSAnnotationWithImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSAnnotationWithImage.m; sourceTree = "<group>"; };
 		0AB420101A6ED1F20078F5F3 /* MapKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AB420141A6ED1F20078F5F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AB420151A6ED1F20078F5F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -51,6 +62,7 @@
 		0AB4202E1A6ED1F20078F5F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AB4202F1A6ED1F20078F5F3 /* MapKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapKitTests.m; sourceTree = "<group>"; };
 		0AB420391A6ED3BF0078F5F3 /* MapKit.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapKit.xib; sourceTree = "<group>"; };
+		0AB9F8AB1A7B58B300A75FAD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AC610C01A6EE87800CB1F14 /* TTTLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TTTLogo.png; sourceTree = "<group>"; };
 		0AC610C21A6EFAE800CB1F14 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		0AC610F91A70376400CB1F14 /* SWSLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSLocationManager.h; sourceTree = "<group>"; };
@@ -72,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A9C96A81A76B85A00AABA37 /* UIKit.framework in Frameworks */,
+				0AB9F8AC1A7B58B300A75FAD /* UIKit.framework in Frameworks */,
 				0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */,
 				0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */,
 			);
@@ -115,6 +127,8 @@
 				0AB420181A6ED1F20078F5F3 /* SWSAppDelegate.m */,
 				0AB4201A1A6ED1F20078F5F3 /* SWSViewController.h */,
 				0AB4201B1A6ED1F20078F5F3 /* SWSViewController.m */,
+				0A472E6D1A8012B9009860C2 /* SWSPlace.h */,
+				0A472E6E1A8012B9009860C2 /* SWSPlace.m */,
 				0AC610FC1A70490E00CB1F14 /* SWSMap.h */,
 				0AC610FD1A70490E00CB1F14 /* SWSMap.m */,
 				0AC610F91A70376400CB1F14 /* SWSLocationManager.h */,
@@ -125,8 +139,14 @@
 				0AC611781A75AA0800CB1F14 /* SWSGeocodedAnnotations.m */,
 				0AC6117A1A75B8BA00CB1F14 /* SWSAnnotation.h */,
 				0AC6117B1A75B8BA00CB1F14 /* SWSAnnotation.m */,
+				0AA8F0A31A7B52EE003F83F4 /* SWSAnnotationWithImage.h */,
+				0AA8F0A41A7B52EE003F83F4 /* SWSAnnotationWithImage.m */,
 				0AC610FF1A7190A900CB1F14 /* MyUtil.h */,
 				0AC611001A7190A900CB1F14 /* MyUtil.m */,
+				0AA8F0A01A7AF915003F83F4 /* NSObject+BVJSONStringCategory.h */,
+				0AA8F0A11A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m */,
+				0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */,
+				0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */,
 				0AB420201A6ED1F20078F5F3 /* Images.xcassets */,
 				0AB420391A6ED3BF0078F5F3 /* MapKit.xib */,
 				0AC610C01A6EE87800CB1F14 /* TTTLogo.png */,
@@ -164,9 +184,9 @@
 		0AB4203F1A6ED6820078F5F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AB9F8AB1A7B58B300A75FAD /* UIKit.framework */,
 				0A9C96A51A76B85400AABA37 /* CoreLocation.framework */,
 				0A9C96A31A76B7F300AABA37 /* MapKit.framework */,
-				0A9C96A71A76B85A00AABA37 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -272,12 +292,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A472E6F1A8012B9009860C2 /* SWSPlace.m in Sources */,
 				0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */,
+				0AA8F0A21A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m in Sources */,
+				0AA8F0A51A7B52EE003F83F4 /* SWSAnnotationWithImage.m in Sources */,
 				0AC611791A75AA0800CB1F14 /* SWSGeocodedAnnotations.m in Sources */,
 				0AC610FE1A70490E00CB1F14 /* SWSMap.m in Sources */,
 				0AC610FB1A70376400CB1F14 /* SWSLocationManager.m in Sources */,
 				0AC6117C1A75B8BA00CB1F14 /* SWSAnnotation.m in Sources */,
 				0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */,
+				0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */,
 				0AB420161A6ED1F20078F5F3 /* main.m in Sources */,
 				0AC611041A7199BD00CB1F14 /* SWSWebViewController.m in Sources */,
 				0AC611011A7190A900CB1F14 /* MyUtil.m in Sources */,

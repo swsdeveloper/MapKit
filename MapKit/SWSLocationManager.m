@@ -30,11 +30,18 @@
     return self;
 }
 
-// Add a location to the Location Manager
+// Set a location using the SWS Location Manager
 
 - (CLLocationCoordinate2D)setLocationAtLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude {
     
     return CLLocationCoordinate2DMake(latitude, longitude);
+}
+
+// Return user's current location
+
+- (CLLocationCoordinate2D)getUsersCurrentLocation {
+    return [self setLocationAtLatitude:self.locationManager.location.coordinate.latitude
+                          andLongitude:self.locationManager.location.coordinate.longitude];
 }
 
 #pragma mark CoreLocationDelegate Protocol Methods:

@@ -12,15 +12,18 @@
 #import "MyUtil.h"
 #import "SWSWebViewController.h"
 #import <AddressBook/AddressBook.h>
+#import "SWSAnnotationWithImage.h"
+#import "SWSViewController.h"
+#import "SWSPlace.h"
 
 
 @implementation SWSMap
 
-- (id)initForViewController:(UIViewController *)viewController {
+- (id)initForViewController:(SWSViewController *)myViewController {
     self = [super init];
     if (self) {
         self = [[SWSMap alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        _viewController = viewController;
+        _viewController = myViewController;
         }
     return self;
 }
@@ -166,6 +169,10 @@
     }
     
     NSString *reuseID = annotation.title;
+
+    if ([annotation isKindOfClass:[SWSAnnotationWithImage class]]) {
+        reuseID = @"Google Places Pin";
+    }
     
     MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseID];
     
@@ -217,7 +224,53 @@
             pinAnnotationView.annotation = annotation;
         }
         return pinAnnotationView;
-
+        
+    } else if ([reuseID isEqualToString:@"Google Places Pin"]) {
+        if(!pinAnnotationView){
+            pinAnnotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseID];
+            pinAnnotationView.pinColor = MKPinAnnotationColorRed;
+            pinAnnotationView.animatesDrop = YES;
+            pinAnnotationView.draggable = NO;
+            pinAnnotationView.enabled = YES;
+            pinAnnotationView.canShowCallout = YES;
+            
+            // If annotation has image, add it as left callout.
+            
+            SWSAnnotationWithImage *annotationWithImage = annotation;   // MKPointAnnotation -> SWSAnnotationWithImage
+            
+            for (SWSPlace *place in self.viewController.placesArray) {
+                NSLog(@"place:%@, %@", place.name, place.addr);
+                if ([place.placeID isEqualToString:annotationWithImage.placeID]) {
+                    if (place.icon) {
+                        UIImage *icon = place.icon;
+                        UIImage *resizedIcon = [MyUtil imageWithImage:icon scaledToSize:CGSizeMake((icon.size.width/2.0),(icon.size.height/2.0))];
+                        UIImageView *iconView = [[UIImageView alloc] initWithImage:resizedIcon];
+                        pinAnnotationView.leftCalloutAccessoryView = iconView;
+                        pinAnnotationView.leftCalloutAccessoryView.tag = 4;
+                    }
+                    break;
+                }
+            }
+            
+            // If annotation has url, add disclosure button as right callout. (Clicking it will open website)
+            
+            for (SWSPlace *place in self.viewController.placesArray) {
+                if ([place.placeID isEqualToString:annotationWithImage.placeID]) {
+                    NSLog(@"placeID:%@, url:%@", place.placeID, [place.url absoluteString]);
+                    if (place.url) {
+                        UIButton *disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+                        pinAnnotationView.rightCalloutAccessoryView = disclosureButton;
+                        pinAnnotationView.rightCalloutAccessoryView.tag = 5;
+                    }
+                    break;
+                }
+            }
+            
+        } else {
+            pinAnnotationView.annotation = annotation;
+        }
+        
+        return pinAnnotationView;
     }
     return nil;
 }
@@ -238,10 +291,10 @@
     if ([control tag] == 1) {
         NSLog(@"Left accessory of TTT annotation tapped");
         
-        BOOL wordFound = [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:@"apple"];
+        BOOL wordFound = [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:@"tech"];
         wordFound = YES;
         if (wordFound) {
-            UIReferenceLibraryViewController *referenceLibraryViewController = [[UIReferenceLibraryViewController alloc] initWithTerm:@"apple"];
+            UIReferenceLibraryViewController *referenceLibraryViewController = [[UIReferenceLibraryViewController alloc] initWithTerm:@"tech"];
             
             UIPopoverController *popOverController = [[UIPopoverController alloc] initWithContentViewController:referenceLibraryViewController];
             popOverController.delegate = self;
@@ -255,7 +308,7 @@
             //    [popOverController setPopoverContentSize:CGSizeMake(600.0, 1200.0)];    // max width = 600.0
             
         } else {
-            NSLog(@"No defintion for \"apple\" (or no dictionary on this device)");
+            NSLog(@"No defintion for \"tech\" (or no dictionary on this device)");
         }
         
     } else if ([control tag] == 2) {
@@ -266,7 +319,7 @@
         
         [[self.viewController navigationController] pushViewController:webViewController animated:YES];
         
-    } else {
+    } else if ([control tag] == 3) {
         NSLog(@"Right accessory of Draggable Pin annotation tapped");
         
         id <MKAnnotation> annotation = view.annotation;
@@ -280,7 +333,7 @@
         self.draggablePinMapItem = [[MKMapItem alloc] initWithPlacemark:draggablePinPlacemark];
         self.draggablePinMapItem.name = annotation.title;
         
-        // The next statement launches Apple's maps app to show directions between the Draggable Pin and the user's Current Location.
+        // The next statements launch Apple's maps app to show directions between the Draggable Pin and the user's Current Location.
         // Unfortunately, there is no way for the user to navigate back to this app
         
         // NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
@@ -290,6 +343,23 @@
         // Create a Direction Request - from current user location to current location of draggable pin
 
         [self showRouteTo:self.draggablePinMapItem];
+        
+    } else if ([control tag] == 5) {
+        NSLog(@"Right accessory of Google Places annotation tapped");
+        
+        SWSAnnotationWithImage *sws = view.annotation;          // MKPointAnnotation -> SWSAnnotationWithImage
+        
+        for (SWSPlace *place in self.viewController.placesArray) {
+            if ([place.placeID isEqualToString:sws.placeID]) {
+                NSLog(@"placeID:%@, addr:%@, url:%@", place.placeID, place.addr, place.url);
+                if (place.url) {
+                    SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
+                    webViewController.url = place.url;
+                    [[self.viewController navigationController] pushViewController:webViewController animated:YES];
+                }
+                break;
+            }
+        }
     }
 }
 
@@ -385,5 +455,10 @@
 - (void)setPopoverContentSize:(CGSize)popoverContentSize {
     self.popoverContentSize = popoverContentSize;
 }
+
+- (CLLocationCoordinate2D)currentUserLocation {
+    return self.userLocation.coordinate;
+}
+
 
 @end

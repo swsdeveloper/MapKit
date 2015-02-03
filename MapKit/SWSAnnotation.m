@@ -1,5 +1,5 @@
 //
-//  SWSPointAnnotation.m
+//  SWSAnnotation.m
 //  MapKit
 //
 //  Created by Steven Shatz on 1/25/15.

@@ -10,9 +10,12 @@
 #import <MapKit/MapKit.h>
 
 
+@class SWSViewController;
+
+
 @interface SWSMap : MKMapView <MKAnnotation, MKMapViewDelegate, UIPopoverControllerDelegate>
 
-@property (strong, nonatomic) UIViewController *viewController;
+@property (strong, nonatomic) SWSViewController *viewController;
 
 @property (assign, nonatomic) MKCoordinateSpan span;        // struct consisting of 2 CLLocationDegrees (latitudeDelta and longitudeDelta)
 
@@ -30,7 +33,7 @@
 
 @property (assign, nonatomic) CLLocationCoordinate2D droppedAt;
 
-- (id)initForViewController:(UIViewController *)viewController;
+- (id)initForViewController:(SWSViewController *)viewController;
 
 - (void)setMapDefaults;
 
@@ -43,5 +46,7 @@
 - (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
 
 - (void)showRouteTo:(MKMapItem *)destItem;
+
+- (CLLocationCoordinate2D)currentUserLocation;
 
 @end

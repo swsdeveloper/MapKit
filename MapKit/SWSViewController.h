@@ -12,21 +12,31 @@
 #import "SWSMap.h"
 
 
-@interface SWSViewController : UIViewController
+@interface SWSViewController : UIViewController <NSURLConnectionDataDelegate>
 
 @property (strong, nonatomic) SWSMap *map;
 
-@property (strong, nonatomic) SWSLocationManager *locationManager;
+@property (strong, nonatomic) SWSLocationManager *swsLocationManager;
 
 @property (strong, nonatomic) MKPointAnnotation *turnToTechAnnotation;
 
 @property (strong, nonatomic) MKPointAnnotation *draggableAnnotation;
 
+@property (strong, nonatomic) MKPointAnnotation *placeAnnotation;
+
 @property (strong, nonatomic) MKPinAnnotationView *annotationView;
 
 @property (strong, nonatomic) NSDictionary *restaurants;
 
-//@property (readonly, nonatomic) CLLocationCoordinate2D coordinate;
+// For Google Places Queries:
+
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
+
+@property (strong, nonatomic) NSMutableData *dataReceived;  // for NSURLConnectionDataDelegate methods - not currently used
+
+@property (strong, nonatomic) NSMutableArray *placesArray;  // array of SWSPlace objects
+
+- (void)googlePlaceDetailsSearch:(NSString *)placeID;   // sets self.placeIDUrl
 
 @end
 

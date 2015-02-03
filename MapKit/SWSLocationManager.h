@@ -18,4 +18,6 @@
 
 - (CLLocationCoordinate2D)setLocationAtLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude;
 
+- (CLLocationCoordinate2D)getUsersCurrentLocation;
+
 @end
