@@ -12,7 +12,9 @@
 #import "SWSMap.h"
 
 
-@interface SWSViewController : UIViewController <NSURLConnectionDataDelegate>
+@interface SWSViewController : UIViewController <NSURLConnectionDataDelegate, UISearchBarDelegate>
+
+@property (assign, nonatomic) BOOL shouldHideStatusBar;
 
 @property (strong, nonatomic) SWSMap *map;
 
@@ -30,7 +32,9 @@
 
 // For Google Places Queries:
 
-@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
+@property (strong, nonatomic) UISearchBar *searchBar;
+
+//@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 
 @property (strong, nonatomic) NSMutableData *dataReceived;  // for NSURLConnectionDataDelegate methods - not currently used
 

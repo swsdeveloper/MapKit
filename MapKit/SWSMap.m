@@ -354,6 +354,11 @@
             if ([place.placeID isEqualToString:sws.placeID]) {
                 NSLog(@"placeID:%@, addr:%@, url:%@", place.placeID, place.addr, place.url);
                 if (place.url) {
+                    
+                    // Hide View Controller's SearchBar before switching to web view
+                    
+                    self.viewController.searchBar.hidden = YES;
+                    
                     SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
                     webViewController.url = place.url;
                     [[self.viewController navigationController] pushViewController:webViewController animated:YES];

@@ -41,7 +41,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.swsLocationManager = [[SWSLocationManager alloc] initWithAccuracy:kCLLocationAccuracyBest];    // Create manager and start tracking user's current location
+    // There is no button that hides the keyboard, so instead we allow the user
+    // to tap anywhere else in the view to hide the keyboard.
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard:)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:gestureRecognizer];
+    
+    // Hide Status Bar
+    
+    self.shouldHideStatusBar = YES;
+    [self prefersStatusBarHidden];
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    // Add Search Bar
+    
+    CGFloat viewWidth = self.navigationController.toolbar.frame.size.width;
+    CGFloat viewHeight = self.navigationController.toolbar.frame.size.height;
+    CGFloat barWidth = viewWidth;
+    CGFloat barHeight = viewHeight;
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, barWidth, barHeight)];
+    self.searchBar.delegate = self;
+    [self.navigationController.view addSubview:self.searchBar];
+    
+    // Create location manager and start tracking user's current location
+
+    self.swsLocationManager = [[SWSLocationManager alloc] initWithAccuracy:kCLLocationAccuracyBest];
     
     self.map = [[SWSMap alloc] initForViewController:self];
     
@@ -92,6 +117,14 @@
     // Placemarks
     
     //[self dropSamplePlacemarks];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.searchBar.hidden = NO;
+}
+
+- (void)hideKeyboard:(UIGestureRecognizer *)gestureRecognizer {
+    [self.searchBar resignFirstResponder];
 }
 
 - (void)dropSamplePlacemarks {
@@ -192,7 +225,7 @@
     
     // Get user-entered search string
     
-    NSString *searchString = [[self.searchTextField text] lowercaseString];
+    NSString *searchString = [[self.searchBar text] lowercaseString];
     NSString *trimmedSearchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // Set up the Google Places search
@@ -762,8 +795,8 @@
     [self.map showRouteTo:self.map.draggablePinMapItem];
 }
 
-- (IBAction)findButtonTapped:(id)sender {
-    if (MYDEBUG) { NSLog(@"\nIn findButtonTapped:\n"); }
+- (IBAction)searchButtonClicked {
+    if (MYDEBUG) { NSLog(@"\nIn searchButtonClicked"); }
     
     // Before doing Google Search, clear any route that may be showing
     
@@ -772,6 +805,10 @@
             [self.map removeOverlay:overlayToRemove];
         }
     }
+    
+    // Dismiss keyboard
+    
+    [self.searchBar resignFirstResponder];
     
     // Google Places Search - find up to 20 nearby Starbucks (based on current user location)
     
@@ -833,6 +870,18 @@
     //    }
     
     NSLog(@"Succeeded! Received %ld bytes of data",(unsigned long)[self.dataReceived length]);
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {                    // called when keyboard search button pressed
+    [self searchButtonClicked];
+}
+
+# pragma mark - Status Bar method
+
+- (BOOL)prefersStatusBarHidden {
+    return self.shouldHideStatusBar;
 }
 
 @end
