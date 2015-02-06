@@ -33,7 +33,7 @@
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="eRQ-Ir-oOV"/>
                         <barButtonItem style="plain" id="Bss-rQ-4cG">
-                            <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search for nearby places" minimumFontSize="17" id="Rxs-4A-bbe">
+                            <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="starbucks" borderStyle="roundedRect" placeholder="Search for nearby places" minimumFontSize="17" id="Rxs-4A-bbe">
                                 <rect key="frame" x="196" y="7" width="235" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>

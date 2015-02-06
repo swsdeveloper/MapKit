@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[SWSViewController processGooglePlaceDetailSearchResults:forID:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController buildPlacesArrayFromResults:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController updatePlacesArrayFromResult:forID:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController updateAnnotationForPlaceAtIndex:]:SWSViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
+               value = "pinAnnotationView.leftCalloutAccessoryView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController updatePlacesArrayURL:forID:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSMap mapView:viewForAnnotation:]:SWSMap.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController updatePlacesArrayIcon:forID:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__46-[SWSViewController googlePlaceDetailsSearch:]_block_invoke:SWSViewController.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

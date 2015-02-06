@@ -174,7 +174,7 @@
         reuseID = @"Google Places Pin";
     }
     
-    MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseID];
+    MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseID];
     
     if ([reuseID isEqualToString:@"Turn To Tech"]) {
         if(!pinAnnotationView){
@@ -239,8 +239,9 @@
             SWSAnnotationWithImage *annotationWithImage = annotation;   // MKPointAnnotation -> SWSAnnotationWithImage
             
             for (SWSPlace *place in self.viewController.placesArray) {
-                NSLog(@"place:%@, %@", place.name, place.addr);
+                //NSLog(@"SWSMAP place:%@, %@", place.name, place.addr);
                 if ([place.placeID isEqualToString:annotationWithImage.placeID]) {
+                    NSLog(@"SWSMAP place:%@, %@", place.name, place.addr);
                     if (place.icon) {
                         UIImage *icon = place.icon;
                         UIImage *resizedIcon = [MyUtil imageWithImage:icon scaledToSize:CGSizeMake((icon.size.width/2.0),(icon.size.height/2.0))];
@@ -364,6 +365,8 @@
 }
 
 - (void)showRouteTo:(MKMapItem *)destItem {
+    if (MYDEBUG) { NSLog(@"Now in: showRouteTo:"); }
+    
     // Create a Direction Request - from current user location to current location of draggable pin
     // Before doing so, remove any polyline overlay that may have previously been shown
     
@@ -397,6 +400,7 @@
 // This next method is necessary for an overlay to be displayed
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    if (MYDEBUG) { NSLog(@"Now in: mapView:rendererForOverlay"); }
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
         [renderer setStrokeColor:[UIColor blueColor]];
