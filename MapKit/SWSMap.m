@@ -315,10 +315,8 @@
     } else if ([control tag] == 2) {
         NSLog(@"Right accessory of TTT annotation tapped");
         
-        SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
-        webViewController.url = [NSURL URLWithString:@"http://turntotech.io"];
-        
-        [[self.viewController navigationController] pushViewController:webViewController animated:YES];
+        NSURL *url = [NSURL URLWithString:@"http://turntotech.io"];
+        [self launchWebView:url];
         
     } else if ([control tag] == 3) {
         NSLog(@"Right accessory of Draggable Pin annotation tapped");
@@ -354,19 +352,22 @@
             if ([place.placeID isEqualToString:sws.placeID]) {
                 NSLog(@"placeID:%@, addr:%@, url:%@", place.placeID, place.addr, place.url);
                 if (place.url) {
-                    
-                    // Hide View Controller's SearchBar before switching to web view
-                    
-                    self.viewController.searchBar.hidden = YES;
-                    
-                    SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
-                    webViewController.url = place.url;
-                    [[self.viewController navigationController] pushViewController:webViewController animated:YES];
+                    [self launchWebView:place.url];
                 }
                 break;
             }
         }
     }
+}
+
+- (void)launchWebView:(NSURL *)url {
+    // Hide View Controller's SearchBar before switching to web view
+    self.viewController.searchBar.hidden = YES;
+    
+    SWSWebViewController *webViewController = [[SWSWebViewController alloc] init];
+    webViewController.url = url;
+
+    [[self.viewController navigationController] pushViewController:webViewController animated:YES];
 }
 
 - (void)showRouteTo:(MKMapItem *)destItem {

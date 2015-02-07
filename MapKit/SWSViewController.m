@@ -21,10 +21,8 @@
 
 
 // To Do:
-// - Move text field to be above keyboard
-// - Add method to dismiss keyboard
-// - Show alert if no hits
 // - Cache results of Icon and URL lookups - to prevent unneeded asynch searches
+// - Draw route to Google Places pin if left icon is clicked
 
 
 @interface SWSViewController ()
@@ -263,8 +261,12 @@
                                completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                    if (error) {
                                        NSLog(@"Google Places Query Error: %@", [error localizedDescription]);
+                                       [self showNoHitsAlert];
                                    } else {
                                        [self processGooglePlaceSearchResults:data];
+                                       if ([self.placesArray count] < 1 ) {
+                                           [self showNoHitsAlert];
+                                       }
                                    }
                                }];
     }
@@ -320,6 +322,17 @@
         
         [self buildPlacesArrayFromResults:resultObject1];
     }
+}
+
+- (void)showNoHitsAlert {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"No Hits"
+                                                                             message:@"No places matched your criteria. Please try again."
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *OKAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:OKAction];
+                                   
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)buildPlacesArrayFromResults:(NSArray *)results {    // Array is cleared when Google Places search starts (see above)
@@ -548,8 +561,8 @@
     if (url) {
         NSLog(@"Place Icon URL: %@\n", [url description]);
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10000.0];
-        // timeout after 15 seconds
+        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
+        // timeout after 30 seconds
         
         NSLog(@"Icon Request: %@\n", [request description]);
         

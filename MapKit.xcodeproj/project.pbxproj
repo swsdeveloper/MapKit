@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0A472E6F1A8012B9009860C2 /* SWSPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A472E6E1A8012B9009860C2 /* SWSPlace.m */; };
+		0A472E731A869CB3009860C2 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E721A869CB3009860C2 /* forward.png */; };
+		0A472E771A869D4C009860C2 /* goBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E761A869D4C009860C2 /* goBack.png */; };
+		0A472E791A86A2A7009860C2 /* exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E781A86A2A7009860C2 /* exit.png */; };
 		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
 		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
 		0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */; };
@@ -42,6 +45,9 @@
 /* Begin PBXFileReference section */
 		0A472E6D1A8012B9009860C2 /* SWSPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSPlace.h; sourceTree = "<group>"; };
 		0A472E6E1A8012B9009860C2 /* SWSPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSPlace.m; sourceTree = "<group>"; };
+		0A472E721A869CB3009860C2 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
+		0A472E761A869D4C009860C2 /* goBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goBack.png; sourceTree = "<group>"; };
+		0A472E781A86A2A7009860C2 /* exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exit.png; sourceTree = "<group>"; };
 		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FindSubstringCategory.h"; sourceTree = "<group>"; };
@@ -148,6 +154,9 @@
 				0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */,
 				0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */,
 				0AB420201A6ED1F20078F5F3 /* Images.xcassets */,
+				0A472E781A86A2A7009860C2 /* exit.png */,
+				0A472E761A869D4C009860C2 /* goBack.png */,
+				0A472E721A869CB3009860C2 /* forward.png */,
 				0AB420391A6ED3BF0078F5F3 /* MapKit.xib */,
 				0AC610C01A6EE87800CB1F14 /* TTTLogo.png */,
 				0AB420131A6ED1F20078F5F3 /* Supporting Files */,
@@ -273,8 +282,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AB420211A6ED1F20078F5F3 /* Images.xcassets in Resources */,
+				0A472E771A869D4C009860C2 /* goBack.png in Resources */,
 				0AB4203A1A6ED3BF0078F5F3 /* MapKit.xib in Resources */,
 				0AC610C11A6EE87800CB1F14 /* TTTLogo.png in Resources */,
+				0A472E731A869CB3009860C2 /* forward.png in Resources */,
+				0A472E791A86A2A7009860C2 /* exit.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

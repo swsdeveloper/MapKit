@@ -10,6 +10,18 @@
 
 @interface SWSWebViewController : UIViewController <UIWebViewDelegate>
 
+@property (assign, nonatomic) BOOL shouldHideStatusBar;
+
+@property (strong, nonatomic) NSArray *toolBarArray;
+
+@property (strong, nonatomic) UIButton *exitButton;
+
+@property (strong, nonatomic) UIButton *backButton;
+
+@property (strong, nonatomic) UIButton *forwardButton;
+
+@property (strong, nonatomic) UIButton *reloadButton;
+
 @property (retain, nonatomic) UIWebView *webView;
 
 @property (retain, nonatomic) NSURL *url;
