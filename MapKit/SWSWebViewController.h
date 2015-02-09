@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SWSWebViewController : UIViewController <UIWebViewDelegate>
+@interface SWSWebViewController : UIViewController <UIWebViewDelegate>  //, NSURLConnectionDataDelegate>
 
 @property (assign, nonatomic) BOOL shouldHideStatusBar;
 
 @property (strong, nonatomic) NSArray *toolBarArray;
+
+// Custom Buttons
 
 @property (strong, nonatomic) UIButton *exitButton;
 
@@ -20,12 +22,17 @@
 
 @property (strong, nonatomic) UIButton *forwardButton;
 
-@property (strong, nonatomic) UIButton *reloadButton;
 
-@property (retain, nonatomic) UIWebView *webView;
+@property (strong, nonatomic) IBOutlet UIWebView *webView;
 
 @property (retain, nonatomic) NSURL *url;
 
 @property (retain, nonatomic) NSURLRequest *urlRequest;
+
+
+//@property (nonatomic) BOOL validatedRequest;
+//
+//@property (nonatomic, strong) NSURL *originalUrl;
+
 
 @end

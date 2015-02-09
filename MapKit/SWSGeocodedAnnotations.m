@@ -25,12 +25,12 @@
 // ****************************************************
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-    NSLog(@"in SWSGeocodedAnnotations encodeWithCoder");
+    NSLog(@"%s", __FUNCTION__);
     [encoder encodeObject:[self geocodedAnnotationsArray] forKey:@"geocodedAnnotations"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    NSLog(@"in SWSGeocodedAnnotations initWithCoder");
+    NSLog(@"%s", __FUNCTION__);
     self = [super init];
     if(self) {
         _geocodedAnnotationsArray = [decoder decodeObjectForKey:@"geocodedAnnotations"];

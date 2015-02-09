@@ -15,6 +15,12 @@
 #define MYDEBUG YES
 
 
+#define MYDEBUG_MKMapViewDelegate NO
+#define MYDEBUG_GetIcon NO
+#define MYDEBUG_GetPlace NO
+#define MYDEBUG_GetPlaceDetail NO
+#define MYDEBUG_UIWebViewDelegate NO
+
 /*                                 Definitions:
  
  Selector - a Selector is the name of a method. Some selectors are: alloc, init, release, dictionaryWithObjectsAndKeys:, setObject:forKey:, etc. Note that the colon is part of the selector;

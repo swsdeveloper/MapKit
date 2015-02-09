@@ -21,8 +21,8 @@
 
 
 // To Do:
+// - Why are some webpages incomplete? (eg: TTT and Museum of Natural History -- see debugging in SWSWebViewController.m - webview did load) - redirects? javascript?
 // - Cache results of Icon and URL lookups - to prevent unneeded asynch searches
-// - Draw route to Google Places pin if left icon is clicked
 
 
 @interface SWSViewController ()
@@ -97,6 +97,16 @@
     self.turnToTechAnnotation.subtitle = @"184 Fifth Avenue, 4th Floor";
     
     [self.map addAnnotation:self.turnToTechAnnotation];
+    
+    if (!self.map.destinationPin) { // If destination pin not yet set, defautl it to TTT
+        id <MKAnnotation> annotation = self.turnToTechAnnotation;
+        NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : annotation.subtitle};
+        MKPlacemark *destinationPlacemark = [[MKPlacemark alloc]
+                                             initWithCoordinate:annotation.coordinate
+                                             addressDictionary:addressDict];
+        self.map.destinationPin = [[MKMapItem alloc] initWithPlacemark:destinationPlacemark];
+    }
+
     
     // Draggable Annotation
     
@@ -197,34 +207,36 @@
     }
 }
 
-
 #pragma mark - Google Place Search
-
 
 // Google Places Search - find up to 20 nearby places (based on current user location)
 
-- (void)googlePlaceSearch {
+// This routine includes support for up to 40 additional hits (via nextPageToken), however since Google Places API indicates that you should never show
+//  more than 1 screen of results per user request, after getting this feature to work, I commented it out - see: processGooglePlaceSearchResults:, below
+
+- (void)googlePlaceSearch:(NSString *)nextPageToken {
     
-    // Remove all preveious Google Places annotations (if any)
+    NSString *trimmedSearchString = @"";
     
-    for (MKPointAnnotation *annotation in self.map.annotations) {
-        if ([annotation isKindOfClass:[SWSAnnotationWithImage class]]) {
-            [self.map removeAnnotation:annotation];
+    if (!nextPageToken) {
+        // Remove all previous Google Places annotations (if any)
+        for (MKPointAnnotation *annotation in self.map.annotations) {
+            if ([annotation isKindOfClass:[SWSAnnotationWithImage class]]) {
+                [self.map removeAnnotation:annotation];
+            }
         }
+        
+        // Clear places array - build it if neccessary
+        if (!self.placesArray) {
+            self.placesArray = [[NSMutableArray alloc] init];
+        }
+        [self.placesArray removeAllObjects];
+        
+        // Get user-entered search string
+        NSString *searchString = [[self.searchBar text] lowercaseString];
+        trimmedSearchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        trimmedSearchString = [trimmedSearchString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];    // Replace spaces in search text with %20
     }
-    
-    // Clear places array - build it if neccessary
-    
-    if (!self.placesArray) {
-        self.placesArray = [[NSMutableArray alloc] init];
-    }
-    
-    [self.placesArray removeAllObjects];
-    
-    // Get user-entered search string
-    
-    NSString *searchString = [[self.searchBar text] lowercaseString];
-    NSString *trimmedSearchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // Set up the Google Places search
     
@@ -237,30 +249,35 @@
     NSString *googlePlacesURL = @"https://maps.googleapis.com/maps/api/place/";
     NSString *searchType = @"nearbysearch/";
     NSString *outputType = @"json?";
-    NSString *searchRange = [NSString stringWithFormat:@"location=%f,%f&radius=500",  // &types=food
+    NSString *searchRange = [NSString stringWithFormat:@"location=%f,%f&radius=1000",  // &types=food
                            currentUserLocation.latitude,
                            currentUserLocation.longitude];
     NSString *searchFor = [NSString stringWithFormat:@"&name=%@",trimmedSearchString];
     
-    NSString *query = [[NSString alloc] initWithFormat:@"%@%@%@%@%@&key=%@", googlePlacesURL, searchType, outputType, searchRange, searchFor, kGooglePlacesAPIKey];
+    NSString *pageToken = @"";
+    if (nextPageToken) {
+        pageToken = [NSString stringWithFormat:@"&pagetoken=%@",nextPageToken];   // if not nil, will return next 20 results (max 60)
+    }
     
-    NSLog(@"query:%@", query);
+    NSString *query = [[NSString alloc] initWithFormat:@"%@%@%@%@%@%@&key=%@", googlePlacesURL, searchType, outputType, searchRange, searchFor, pageToken, kGooglePlacesAPIKey];
+    
+    //NSLog(@"query:%@", query);
     
     NSURL *url = [NSURL URLWithString:query];
     
     if (url) {
-        NSLog(@"Places URL: %@\n", [url description]);
+        //NSLog(@"Places URL: %@", [url description]);
         
         NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         // timeout after 1 minute
         
-        NSLog(@"Request: %@\n", [request description]);
+        NSLog(@"\nRequest: %@\n", [request description]);
         
         [NSURLConnection sendAsynchronousRequest:request
                                            queue:[NSOperationQueue mainQueue]
                                completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                    if (error) {
-                                       NSLog(@"Google Places Query Error: %@", [error localizedDescription]);
+                                       NSLog(@"*** Google Places Query Error: %@ ***", [error localizedDescription]);
                                        [self showNoHitsAlert];
                                    } else {
                                        [self processGooglePlaceSearchResults:data];
@@ -273,7 +290,7 @@
 }
 
 - (void)processGooglePlaceSearchResults:(NSData *)jsonData {
-    NSLog(@"In processGooglePlaceSearchResults");
+    NSLog(@"%s", __FUNCTION__);
     
 //    if (MYDEBUG) {
 //        NSString *dataAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -321,6 +338,22 @@
         }
         
         [self buildPlacesArrayFromResults:resultObject1];
+        
+        /*
+        // If there are more places, trigger another search
+        // NOTE: Google Places API says do not display more than 20 results at a time - so after getting this to work, I commented it out
+        
+        resultObject1 = [dict valueForKey:@"next_page_token"];
+        if (resultObject1) {
+            if (![resultObject1 isKindOfClass:[NSString class]]) {
+                NSLog(@"*** ValueForKey:@\"next_page_token\" is not a string - there are no more hits to fetch ***");
+                return;
+            } else {
+                [self performSelector:@selector(googlePlaceSearch:) withObject:resultObject1 afterDelay:2.0];   // Wait 2 seconds, then issue next search
+            }
+        }
+         */
+        
     }
 }
 
@@ -337,7 +370,7 @@
 
 - (void)buildPlacesArrayFromResults:(NSArray *)results {    // Array is cleared when Google Places search starts (see above)
     
-    NSLog(@"GooglePlacesQuery buildArrayFromResults");
+    NSLog(@"%s", __FUNCTION__);
     
     /* ***********************************************************************************************************************************************************
        Output format - each array entry:
@@ -556,27 +589,27 @@
 #pragma mark - Place Icon Lookup
 
 - (void)getIconFromPath:(NSString *)iconPath forPlaceID:(NSString *)placeID {
-    if (MYDEBUG) { NSLog(@"\nIn getIconFromPath:forPlaceID:\n"); }
+    NSLog(@"\n%s placeID=%@", __FUNCTION__, placeID);
     NSURL *url = [NSURL URLWithString:iconPath];
     if (url) {
-        NSLog(@"Place Icon URL: %@\n", [url description]);
+        //NSLog(@"Place Icon URL: %@\n", [url absoluteString]);
         
         NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
         // timeout after 30 seconds
         
-        NSLog(@"Icon Request: %@\n", [request description]);
+        if (MYDEBUG_GetIcon) { NSLog(@"Icon Request: %@\n", [request description]); }
         
         [NSURLConnection sendAsynchronousRequest:request
                                            queue:[NSOperationQueue mainQueue]
                                completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                    if (error) {
-                                       NSLog(@"Place Icon Fetch Error: %@", [error localizedDescription]);
+                                       NSLog(@"Icon Request Error: %@", [error localizedDescription]);
                                    } else {
                                        UIImage *image = [UIImage imageWithData:data];   // will be nil, if not an image
                                        if (image) {
                                            [self updatePlaceIcon:image forID:placeID];
                                        } else {
-                                           NSLog(@"Not an Image At Path Error: %@", iconPath);
+                                           NSLog(@"Not an Image At Icon Path Error: %@", iconPath);
                                        }
                                    }
                                }];
@@ -584,7 +617,7 @@
 }
 
 - (void)updatePlaceIcon:(UIImage *)placeIcon forID:(NSString *)placeID {
-    if (MYDEBUG) { NSLog(@"In updatePlacesArrayIcon:forID:%@",placeID); }
+    NSLog(@"\n%s placeID=%@", __FUNCTION__, placeID);
     int count = (int)[self.placesArray count];
     for (int i=0; i < count; i++) {
         SWSPlace *place = self.placesArray[i];
@@ -592,7 +625,7 @@
             if (placeIcon) {
                 place.icon = placeIcon;
                 [self.placesArray replaceObjectAtIndex:i withObject:place];
-                NSLog(@"self.placesArray.place.icon[%d] = %@", i, [place.icon description]);
+                if (MYDEBUG_GetIcon) { NSLog(@"self.placesArray.place.icon[%d] = %@", i, [place.icon description]); }
                 [self updateAnnotationForPlaceAtIndex:i];
             }
             break;
@@ -601,17 +634,17 @@
 }
 
 - (void)updateAnnotationForPlaceAtIndex:(int)index {
-    NSLog(@"In updateAnnotationForPlaceAtIndex:%d",index);
+    NSLog(@"%s index=%d", __FUNCTION__, index);
    
     SWSAnnotationWithImage *swsAnnotationWithImage = nil;
 
     SWSPlace *place = self.placesArray[index];
     
-    NSLog(@"place.placeID=%@",place.placeID);
+    if (MYDEBUG_GetPlaceDetail) { NSLog(@"place.placeID=%@",place.placeID); }
 
     int count = (int)[[self.map annotations] count];
     for (int i=0; i<count; ++i) {
-        NSLog(@"index:%d of %d",i, count);
+        //NSLog(@"index:%d of %d",i, count);
         id annotation = self.map.annotations[i];
         if ([annotation isKindOfClass:[SWSAnnotationWithImage class]]) {
             
@@ -620,16 +653,18 @@
             MKPinAnnotationView *pinAnnotationView = (MKPinAnnotationView *)[self.map viewForAnnotation:annotation];
             
             if ([place.placeID isEqualToString:swsAnnotationWithImage.placeID]) {
-                NSLog(@"placeID match");
+                if (MYDEBUG_GetPlace) { NSLog(@"placeID match"); }
                 if (place.icon) {
                     UIImage *icon = place.icon;
                     UIImage *resizedIcon = [MyUtil imageWithImage:icon scaledToSize:CGSizeMake((icon.size.width/2.0),(icon.size.height/2.0))];
                     UIImageView *iconView = [[UIImageView alloc] initWithImage:resizedIcon];
-                
-                    pinAnnotationView.leftCalloutAccessoryView = iconView;
+                    UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                    imageButton.frame = [iconView frame];
+                    [imageButton setImage:icon forState:UIControlStateNormal];
+                    pinAnnotationView.leftCalloutAccessoryView = imageButton;
                     pinAnnotationView.leftCalloutAccessoryView.tag = 4;
                 } else {
-                    NSLog(@"No place.icon");
+                    //NSLog(@"No place.icon");
                 }
                 
                 if (place.url) {
@@ -637,7 +672,7 @@
                     pinAnnotationView.rightCalloutAccessoryView = disclosureButton;
                     pinAnnotationView.rightCalloutAccessoryView.tag = 5;
                 } else {
-                    NSLog(@"No place.url");
+                    //NSLog(@"No place.url");
                 }
                 
                 if (place.icon || place.url) {
@@ -647,10 +682,10 @@
                 }
                 break;
             } else {
-                NSLog(@"PlaceID does not match - check next annotation");
+                //NSLog(@"PlaceID does not match - check next annotation");
             }
         } else {
-            NSLog(@"annotation is class:%@",[[annotation class] description]);
+            //NSLog(@"annotation is class:%@",[[annotation class] description]);
         }
     }
 }
@@ -659,7 +694,7 @@
 #pragma mark - Google Place Detail Search
 
 - (void)googlePlaceDetailsSearch:(NSString *)placeID {
-    NSLog(@"In googlePlaceDetailsSearch:");
+    NSLog(@"%s placeID=%@", __FUNCTION__, placeID);
     
     NSString *googlePlacesURL = @"https://maps.googleapis.com/maps/api/place/";
     NSString *searchType = @"details/";
@@ -671,18 +706,18 @@
     NSURL *url = [NSURL URLWithString:query];
     
     if (url) {
-        NSLog(@"Place Detail URL: %@\n", [url description]);
+        //NSLog(@"Place Detail URL: %@\n", [url description]);
         
         NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
         // timeout after 1 minute
         
-        NSLog(@"URL Request: %@\n", [request description]);
+        if (MYDEBUG_GetPlaceDetail) { NSLog(@"URL Request: %@\n", [request description]); }
         
         [NSURLConnection sendAsynchronousRequest:request
                                            queue:[NSOperationQueue mainQueue]
                                completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                    if (error) {
-                                       NSLog(@"Google Place Detail Query Error: %@", [error localizedDescription]);
+                                       NSLog(@"*** Google Place Detail Query Error: %@ ***", [error localizedDescription]);
                                    } else {
                                        [self processGooglePlaceDetailSearchResults:data forID:placeID];  // update array even if placeUrl is nil
                                    }
@@ -691,7 +726,7 @@
 }
 
 - (void)processGooglePlaceDetailSearchResults:(NSData *)jsonData forID:(NSString *)placeID {
-    NSLog(@"In processGooglePlaceDetailSearchResults:forID:");
+    if (MYDEBUG_GetPlaceDetail) { NSLog(@"\n%s placeID=%@", __FUNCTION__, placeID); }
     
 //    if (MYDEBUG) {
 //        NSString *dataAsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -731,29 +766,29 @@
     id placeUrl = nil;
     
     placeUrl = [result valueForKey:@"website"];   // official website
-    if (![placeUrl isKindOfClass:[NSString class]]) {
+    if (placeUrl && ![placeUrl isKindOfClass:[NSString class]]) {
         NSLog(@"*** ValueForKey:@\"result:website\" is not a String - website is unknown - check for url ***");
         placeUrl = nil;
     } else {
-        NSLog(@"website: %@", placeUrl);
+        if (MYDEBUG_GetPlaceDetail) { NSLog(@"website: %@", placeUrl); }
     }
     
     if (!placeUrl) {
         placeUrl = [dict valueForKey:@"url"];       // Google's main url for this place
-        if (![placeUrl isKindOfClass:[NSString class]]) {
+        if (placeUrl && ![placeUrl isKindOfClass:[NSString class]]) {
             NSLog(@"*** ValueForKey:@\"result:url\" is not a String - url is unknown ***");
         } else {
-            NSLog(@"url: %@", placeUrl);
+            if (MYDEBUG_GetPlaceDetail) { NSLog(@"url: %@", placeUrl); }
         }
     }
     
-    NSLog(@"placeUrl: %@", placeUrl);
+    //NSLog(@"placeUrl: %@", placeUrl);
     
     [self updatePlaceURL:placeUrl forID:placeID];  // update array even if placeUrl is nil
 }
 
 - (void)updatePlaceURL:(NSString *)placeURL forID:(NSString *)placeID {
-    if (MYDEBUG) { NSLog(@"\nIn updatePlacesArrayURL:forID:\n"); }
+    NSLog(@"\n%s placeID=%@", __FUNCTION__, placeID);
     int count = (int)[self.placesArray count];
     for (int i=0; i < count; i++) {
         SWSPlace *place = self.placesArray[i];
@@ -770,7 +805,7 @@
 
 
 - (void)didReceiveMemoryWarning {
-    NSLog(@"\nIn didReceiveMemoryWarning\n");
+    NSLog(@"%s", __FUNCTION__);
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -779,15 +814,19 @@
 #pragma mark - IBAction methods
 
 - (IBAction)setMapType:(id)sender {
+    NSLog(@"");
     switch (((UISegmentedControl *)sender).selectedSegmentIndex) {
         case 0:
             [self.map setMapType:MKMapTypeStandard];
+            NSLog(@"MapType changed to Standard");
             break;
         case 1:
             [self.map setMapType:MKMapTypeSatellite];
+            NSLog(@"MapType changed to Satellite");
             break;
         case 2:
             [self.map setMapType:MKMapTypeHybrid];
+            NSLog(@"MapType changed to Hybrid");
             break;
         default:
             break;
@@ -795,22 +834,24 @@
 }
 
 - (IBAction)setTransportationType:(id)sender {
+    NSLog(@"");
     switch (((UISegmentedControl *)sender).selectedSegmentIndex) {
         case 0:
             self.map.transportType = MKDirectionsTransportTypeAutomobile;
+            NSLog(@"Transportation Mode changed to Driving");
             break;
         case 1:
             self.map.transportType = MKDirectionsTransportTypeWalking;
+            NSLog(@"Transportation Mode changed to Walking");
             break;
         default:
             break;
     }
-    [self.map showRouteTo:self.map.draggablePinMapItem];
+    [self.map showRouteTo:self.map.destinationPin];
 }
 
 - (IBAction)searchButtonClicked {
-    if (MYDEBUG) { NSLog(@"\nIn searchButtonClicked"); }
-    
+    NSLog(@"\nSearch Button Clicked: %@", self.searchBar.text);
     // Before doing Google Search, clear any route that may be showing
     
     for (id<MKOverlay> overlayToRemove in self.map.overlays) {
@@ -825,7 +866,7 @@
     
     // Google Places Search - find up to 20 nearby Starbucks (based on current user location)
     
-    [self googlePlaceSearch];
+    [self googlePlaceSearch:nil];
 }
 
 
@@ -843,14 +884,13 @@
     // It can be called multiple times, for example in the case of a
     // redirect, so each time we reset the data.
     
-    if (MYDEBUG) { NSLog(@"\nGooglePlacesQuery connection:didReceiveResponse:\n%@", response); }
+    if (MYDEBUG) { NSLog(@"\n%s response=%@\n", __FUNCTION__, response); }
     
     [self.dataReceived setLength:0];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    NSLog(@"\n***GooglePlacesQuery connection:didFailWithError: ***");
+    NSLog(@"\n%s\n", __FUNCTION__);
     
     self.dataReceived = nil;
     
@@ -863,7 +903,7 @@
     
     if (MYDEBUG) {
         //NSString *aString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"\nGooglePlacesQuery connection:didReceiveData: ... \n");
+        NSLog(@"\n%s ... \n", __FUNCTION__);
     }
     
     if (self.dataReceived) {
@@ -875,7 +915,7 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSLog(@"\nGooglePlacesQuery ConnectionDidFinishLoading:");
+    NSLog(@"\n%s", __FUNCTION__);
     
     //    if (MYDEBUG) {
     //        NSString *dataAsString = [[NSString alloc] initWithData:self.dataReceived encoding:NSUTF8StringEncoding];

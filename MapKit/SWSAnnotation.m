@@ -26,7 +26,7 @@
 // ****************************************************
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-    NSLog(@"in SWSAnnotation encodeWithCoder");
+    NSLog(@"%s", __FUNCTION__);
     [encoder encodeDouble:self.coordinate.latitude forKey:@"swsAnnotationLatitude"];
     [encoder encodeDouble:self.coordinate.longitude forKey:@"swsAnnotationLongitude"];
     [encoder encodeObject:self.title forKey:@"swsAnnotationTitle"];
@@ -34,7 +34,7 @@
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    NSLog(@"in SWSAnnotation initWithCoder");
+    NSLog(@"%s", __FUNCTION__);
     self = [super init];
     if(self) {
         _coordinate.latitude = [decoder decodeDoubleForKey:@"swsAnnotationLatitude"];

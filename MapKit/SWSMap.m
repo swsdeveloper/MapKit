@@ -84,8 +84,9 @@
 #pragma mark MKMapViewDelegate Protocol Methods:
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    
-    NSLog(@"Location: %f, %f",
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
+
+    NSLog(@"Mapview Updated User Location: %f, %f",
           userLocation.location.coordinate.latitude,
           userLocation.location.coordinate.longitude);
     
@@ -105,51 +106,51 @@
 }
 
 - (void)mapViewWillStartLocatingUser:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewWillStartLocatingUser"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewWillStopLocatingUser:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewWillStopLocatingUser"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewDidStopLocatingUser:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewDidStopLocatingUser"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:didFailToLocateUserWithError"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapView:(MKMapView *)mapView didChangeUserTrackingMode:(MKUserTrackingMode)mode animated:(BOOL)animated {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:didChangeUserTrackingMode") }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:regionWillChangeAnimated"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:regionDidChangeAnimated"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewWillStartLoadingMap:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewWillStartLoadingMap"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewDidFinishLoadingMap"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewDidFailLoadingMap"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewWillStartRenderingMap:(MKMapView *)mapView {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewWillStartRenderingMap"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 - (void)mapViewDidFinishRenderingMap:(MKMapView *)mapView fullyRendered:(BOOL)fullyRendered {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewDidFinishRenderingMap"); }
+    if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
 }
 
 
@@ -161,10 +162,10 @@
 // Provides a custom image instead of the standard red pins
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
-    if (MYDEBUG) { NSLog(@"Now in: mapViewViewForAnnotation"); }
+    if (MYDEBUG) { NSLog(@"\n%s", __FUNCTION__); }
     
     if ([annotation isKindOfClass:[MKUserLocation class]]) {    // return nil so map view draws glowing "blue dot" for user's current location
-        NSLog(@"MKUserLocation");
+        //NSLog(@"MKUserLocation");
         return nil;
     }
     
@@ -244,9 +245,11 @@
                     NSLog(@"SWSMAP place:%@, %@", place.name, place.addr);
                     if (place.icon) {
                         UIImage *icon = place.icon;
-                        UIImage *resizedIcon = [MyUtil imageWithImage:icon scaledToSize:CGSizeMake((icon.size.width/2.0),(icon.size.height/2.0))];
-                        UIImageView *iconView = [[UIImageView alloc] initWithImage:resizedIcon];
-                        pinAnnotationView.leftCalloutAccessoryView = iconView;
+                        UIImageView *iconView = [[UIImageView alloc] initWithImage:icon];
+                        UIButton *imageButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                        imageButton.frame = [iconView frame];
+                        [imageButton setImage:icon forState:UIControlStateNormal];
+                        pinAnnotationView.leftCalloutAccessoryView = imageButton;
                         pinAnnotationView.leftCalloutAccessoryView.tag = 4;
                     }
                     break;
@@ -281,13 +284,13 @@
 // Use the current positions of the annotation views as the destinations of the animation.
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:didAddAnnotationViews"); }
+    if (MYDEBUG) { NSLog(@"\n%s", __FUNCTION__); }
 }
 
 // mapView:annotationView:calloutAccessoryControlTapped: is called when the user taps on left & right callout accessory UIControls.
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:annotationView:calloutAccessoryControlTapped"); }
+    //if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
     
     if ([control tag] == 1) {
         NSLog(@"Left accessory of TTT annotation tapped");
@@ -318,30 +321,30 @@
         NSURL *url = [NSURL URLWithString:@"http://turntotech.io"];
         [self launchWebView:url];
         
-    } else if ([control tag] == 3) {
-        NSLog(@"Right accessory of Draggable Pin annotation tapped");
+    } else if ([control tag] == 3 || [control tag] == 4) {
+        NSLog(@"Right accessory of Draggable Pin or Left image of Google Places annotation tapped");
         
         id <MKAnnotation> annotation = view.annotation;
         
         NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : annotation.subtitle};
         
-        MKPlacemark *draggablePinPlacemark = [[MKPlacemark alloc]
+        MKPlacemark *destinationPlacemark = [[MKPlacemark alloc]
                                             initWithCoordinate:annotation.coordinate
                                             addressDictionary:addressDict];
         
-        self.draggablePinMapItem = [[MKMapItem alloc] initWithPlacemark:draggablePinPlacemark];
-        self.draggablePinMapItem.name = annotation.title;
+        self.destinationPin = [[MKMapItem alloc] initWithPlacemark:destinationPlacemark];
+        self.destinationPin.name = annotation.title;
         
         // The next statements launch Apple's maps app to show directions between the Draggable Pin and the user's Current Location.
         // Unfortunately, there is no way for the user to navigate back to this app
-        
+        //
         // NSDictionary *launchOptions = @{MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDriving};
+        // [self.destinationPin openInMapsWithLaunchOptions:launchOptions];
         
-        // [draggablePinMapItem openInMapsWithLaunchOptions:launchOptions];
         
-        // Create a Direction Request - from current user location to current location of draggable pin
+        // Create a Direction Request - from current user location to destination pin location
 
-        [self showRouteTo:self.draggablePinMapItem];
+        [self showRouteTo:self.destinationPin];
         
     } else if ([control tag] == 5) {
         NSLog(@"Right accessory of Google Places annotation tapped");
@@ -371,7 +374,7 @@
 }
 
 - (void)showRouteTo:(MKMapItem *)destItem {
-    if (MYDEBUG) { NSLog(@"Now in: showRouteTo:"); }
+    if (MYDEBUG) { NSLog(@"%s Name=%@, Lat=%f, Long=%f", __FUNCTION__, destItem.name, destItem.placemark.coordinate.latitude, destItem.placemark.coordinate.longitude); }
     
     // Create a Direction Request - from current user location to current location of draggable pin
     // Before doing so, remove any polyline overlay that may have previously been shown
@@ -406,7 +409,7 @@
 // This next method is necessary for an overlay to be displayed
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:rendererForOverlay"); }
+    if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
         [renderer setStrokeColor:[UIColor blueColor]];
@@ -417,27 +420,27 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:didSelectAnnotationView"); }
+    if (MYDEBUG) { NSLog(@"\n%s", __FUNCTION__); }
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:didDeselectAnnotationView"); }
+    if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
 }
 
 // This gets called as Draggable Pin gets dragged
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
-    if (MYDEBUG) { NSLog(@"Now in: mapView:annotationView:didChangeDragState:fromOldState"); }
+    if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
     if (newState == MKAnnotationViewDragStateEnding) {
         self.droppedAt = view.annotation.coordinate;
         NSLog(@"Pin dropped at %f,%f", self.droppedAt.latitude, self.droppedAt.longitude);
         
         NSDictionary *addressDict = @{(NSString*)kABPersonAddressStreetKey : @""};
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:self.droppedAt addressDictionary:addressDict];
-        self.draggablePinMapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
-        self.draggablePinMapItem.name = @"Draggable Pin";
+        self.destinationPin = [[MKMapItem alloc] initWithPlacemark:placemark];
+        self.destinationPin.name = @"Draggable Pin";
         
-        [self showRouteTo:self.draggablePinMapItem];
+        [self showRouteTo:self.destinationPin];
     }
     
 // The following code degrades the ability to drag the pin:

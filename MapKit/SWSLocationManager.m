@@ -40,8 +40,9 @@
 // Return user's current location
 
 - (CLLocationCoordinate2D)getUsersCurrentLocation {
-    return [self setLocationAtLatitude:self.locationManager.location.coordinate.latitude
-                          andLongitude:self.locationManager.location.coordinate.longitude];
+//    return [self setLocationAtLatitude:self.locationManager.location.coordinate.latitude
+//                          andLongitude:self.locationManager.location.coordinate.longitude];
+    return self.currentLocation;
 }
 
 #pragma mark CoreLocationDelegate Protocol Methods:
@@ -52,7 +53,9 @@
     
     CLLocation *myLoc = myLocs[0];
     
-    NSLog(@"New Location: Latitude: %f, Longitude: %f", myLoc.coordinate.latitude, myLoc.coordinate.longitude);
+    self.currentLocation = myLoc.coordinate;
+    
+    NSLog(@"Location Manager Updated Location: Latitude: %f, Longitude: %f", self.currentLocation.latitude, self.currentLocation.longitude);
     
     [self.locationManager stopUpdatingLocation];
     [self.locationManager startMonitoringSignificantLocationChanges];

@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) CLLocationManager* locationManager;
 
+@property (assign, nonatomic) CLLocationCoordinate2D currentLocation;
+
 - (id)initWithAccuracy:(CLLocationAccuracy)accuracy;
 
 - (CLLocationCoordinate2D)setLocationAtLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude;

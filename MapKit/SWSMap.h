@@ -29,7 +29,7 @@
 
 @property (assign, nonatomic) MKDirectionsTransportType transportType;
 
-@property (strong, nonatomic) MKMapItem *draggablePinMapItem;
+@property (strong, nonatomic) MKMapItem *destinationPin;
 
 @property (assign, nonatomic) CLLocationCoordinate2D droppedAt;
 
