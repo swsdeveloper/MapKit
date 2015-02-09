@@ -293,7 +293,7 @@
     //if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
     
     if ([control tag] == 1) {
-        NSLog(@"Left accessory of TTT annotation tapped");
+        NSLog(@"Left icon of TTT annotation tapped");
         
         BOOL wordFound = [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:@"tech"];
         wordFound = YES;
@@ -316,13 +316,14 @@
         }
         
     } else if ([control tag] == 2) {
-        NSLog(@"Right accessory of TTT annotation tapped");
+        NSLog(@"Right button of TTT annotation tapped");
         
         NSURL *url = [NSURL URLWithString:@"http://turntotech.io"];
         [self launchWebView:url];
         
     } else if ([control tag] == 3 || [control tag] == 4) {
-        NSLog(@"Right accessory of Draggable Pin or Left image of Google Places annotation tapped");
+        if ([control tag] == 3) { NSLog(@"Right button of Draggable Pin annotation tapped"); }
+        if ([control tag] == 4) { NSLog(@"Left icon of Google Places annotation tapped"); }
         
         id <MKAnnotation> annotation = view.annotation;
         
@@ -347,7 +348,7 @@
         [self showRouteTo:self.destinationPin];
         
     } else if ([control tag] == 5) {
-        NSLog(@"Right accessory of Google Places annotation tapped");
+        NSLog(@"Right button of Google Places annotation tapped");
         
         SWSAnnotationWithImage *sws = view.annotation;          // MKPointAnnotation -> SWSAnnotationWithImage
         

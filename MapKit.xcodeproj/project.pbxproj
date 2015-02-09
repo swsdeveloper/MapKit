@@ -11,6 +11,7 @@
 		0A472E731A869CB3009860C2 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E721A869CB3009860C2 /* forward.png */; };
 		0A472E771A869D4C009860C2 /* goBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E761A869D4C009860C2 /* goBack.png */; };
 		0A472E791A86A2A7009860C2 /* exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E781A86A2A7009860C2 /* exit.png */; };
+		0A472E7B1A8874FC009860C2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A472E7A1A8874FC009860C2 /* QuartzCore.framework */; };
 		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
 		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
 		0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */; };
@@ -48,6 +49,7 @@
 		0A472E721A869CB3009860C2 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
 		0A472E761A869D4C009860C2 /* goBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goBack.png; sourceTree = "<group>"; };
 		0A472E781A86A2A7009860C2 /* exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exit.png; sourceTree = "<group>"; };
+		0A472E7A1A8874FC009860C2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FindSubstringCategory.h"; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A472E7B1A8874FC009860C2 /* QuartzCore.framework in Frameworks */,
 				0AB9F8AC1A7B58B300A75FAD /* UIKit.framework in Frameworks */,
 				0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */,
 				0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */,
@@ -193,6 +196,7 @@
 		0AB4203F1A6ED6820078F5F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A472E7A1A8874FC009860C2 /* QuartzCore.framework */,
 				0AB9F8AB1A7B58B300A75FAD /* UIKit.framework */,
 				0A9C96A51A76B85400AABA37 /* CoreLocation.framework */,
 				0A9C96A31A76B7F300AABA37 /* MapKit.framework */,

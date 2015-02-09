@@ -8,17 +8,21 @@
 
 #import "SWSWebViewController.h"
 #import "Constants.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 @implementation SWSWebViewController
 
 - (void)viewDidLoad {
+    //NSLog(@"%s", __FUNCTION__);
+
     [super viewDidLoad];
     _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     _webView.delegate = self;
-    _webView.scalesPageToFit = YES;
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview: _webView];
-    //NSLog(@"%s", __FUNCTION__);
+    
+    if (CACHE_Fix) { self.lastUrl = nil; }
     
     // Hide Status Bar
     
@@ -54,12 +58,18 @@
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonTapped:)];
     UIBarButtonItem *reloadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadButtonTapped:)];
-
+    
     self.toolBarArray = [[NSArray alloc] initWithObjects: exitButton, fixedSpace, backButton, fixedSpace,
-                         forwardButton, fixedSpace, cancelButton, fixedSpace, reloadButton, nil];
+                         forwardButton, fixedSpace, cancelButton, reloadButton, nil];
     
     self.navigationItem.leftBarButtonItems=self.toolBarArray;
     
+    self.label = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 5.0, 200, 42)];
+    self.label.backgroundColor = [UIColor lightGrayColor];
+    self.label.text = @"";
+    
+    self.navigationItem.title=self.label.text;
+
 
     /*
     // Since `shouldStartLoadWithRequest` only validates when a user clicks on a link, we'll bypass that
@@ -117,6 +127,7 @@
 
 -(IBAction)reloadButtonTapped:(id)sender {
     NSLog(@"Reload Button Was Tapped");
+    [self.webView stopLoading];
     [self.webView reload];
 }
 
@@ -147,41 +158,100 @@
     return NO;
     */
     
-    
+    if (webView.loading) {  // Don't interrupt webpage if it is in the midst of loading
+        return NO;
+    }
     return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
+    
+    webView.scrollView.scrollEnabled = TRUE;
     [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.querySelector('meta[name=viewport]').setAttribute('content', 'width=%d;', false); ", (int)webView.frame.size.width]]; // Use javascript to force display to full webpage width
     webView.scalesPageToFit = YES;
+    
+    // Show spinning activity indicator while webpage is loading
+    if (self.loadingView) {
+        [self.loadingView setHidden:NO];
+    } else {
+        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake((webView.bounds.size.width-80.0)/2.0, (webView.bounds.size.height-80.0)/2.0, 80.0, 80.0)];
+        self.loadingView.backgroundColor = [UIColor colorWithWhite:0. alpha:0.6];
+        self.loadingView.layer.cornerRadius = 5;
+        
+        UIActivityIndicatorView *activityView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activityView.center = CGPointMake(self.loadingView.frame.size.width / 2.0, 35);
+        [activityView startAnimating];
+        activityView.tag = 100;
+        [self.loadingView addSubview:activityView];
+        
+        UILabel* lblLoading = [[UILabel alloc]initWithFrame:CGRectMake(0, 48, 80, 30)];
+        lblLoading.text = @"Loading...";
+        lblLoading.textColor = [UIColor whiteColor];
+        lblLoading.font = [UIFont fontWithName:lblLoading.font.fontName size:15];
+        lblLoading.textAlignment = NSTextAlignmentCenter;
+        [self.loadingView addSubview:lblLoading];
+        
+        [self.view addSubview:self.loadingView];
+    }
+
+
+    if (CACHE_Fix) { self.lastUrl = [[webView request] URL]; }
 }
 
 // This will be called for 404 errors
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
-    [webView stopLoading];
+    
+// The following code reloads a webpage bypassing the cache (in case cached results are no longer valid):
+    if (CACHE_Fix) {
+        if ([webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"].length < 1) {
+            NSLog(@"Reconstructing request...");
+            NSString *uniqueURL = [NSString stringWithFormat:@"%@?t=%@", self.lastUrl, [[NSProcessInfo processInfo] globallyUniqueString]];
+            [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:uniqueURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:5.0]];
+        }
+    }
+    
+    [self.loadingView setHidden:YES];
+    
+//    [webView stopLoading];
     
 //    self.validatedRequest = NO; // reset this for the next link the user clicks on
     
-    // Debugging: go to website and return entire contents of page as an ASCII string -- odd: always shows previous page we left, not page we're going to - why?
-    NSLog(@"\n*****************************************************************************************************************");
-    NSURL *requestURL = [[webView request] URL];
-    NSError *error;
-    NSString *page = [NSString stringWithContentsOfURL:requestURL
-                                              encoding:NSASCIIStringEncoding
-                                                 error:&error];
-    NSLog(@"URL: %@ returned:\n\n%@", [requestURL absoluteString], page);
-    NSLog(@"\nURLError: %@", [error description]);
-    NSLog(@"*****************************************************************************************************************\n");
+    // Debugging: go to website and capture entire contents of page as an ASCII string
+    if (MYDEBUG_CaptureWebPage) {
+        NSLog(@"\n*****************************************************************************************************************");
+        NSURL *requestURL = [[webView request] URL];
+        NSError *error;
+        NSString *page = [NSString stringWithContentsOfURL:requestURL
+                                                  encoding:NSASCIIStringEncoding
+                                                     error:&error];
+        NSLog(@"URL: %@ returned:\n\n%@", [requestURL absoluteString], page);
+        NSLog(@"\nURLError: %@", [error description]);
+        NSLog(@"*****************************************************************************************************************\n");
+    }
+    
+    self.label.text = [[[webView request] URL] absoluteString];
+    self.navigationItem.title=self.label.text;
     
     [webView setNeedsDisplay];
 }
 
 // You will not see this called for 404 errors
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s error=%@", __FUNCTION__, [error description]); }
-    [webView stopLoading];
+    /*
+     NSURLErrorUnknown = -1
+     NSURLErrorCancelled = -999 --- another url request was made before the current one finished; perhaps a redirect? or a frame in the current page?
+     NSURLErrorBadURL = -1000
+     NSURLErrorTimedOut = -1001
+     */
+    
+    NSLog(@"%s error=%@", __FUNCTION__, [error description]);
+    
+    [self.loadingView setHidden:YES];
+    
+//    [webView stopLoading];
+    
 }
 
 /*

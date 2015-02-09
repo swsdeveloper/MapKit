@@ -22,12 +22,19 @@
 
 @property (strong, nonatomic) UIButton *forwardButton;
 
+@property (strong, nonatomic) UILabel *label;
+
+
+@property (strong, nonatomic) UIView* loadingView;
+
 
 @property (strong, nonatomic) IBOutlet UIWebView *webView;
 
 @property (retain, nonatomic) NSURL *url;
 
 @property (retain, nonatomic) NSURLRequest *urlRequest;
+
+@property (retain, nonatomic) NSURL *lastUrl;
 
 
 //@property (nonatomic) BOOL validatedRequest;

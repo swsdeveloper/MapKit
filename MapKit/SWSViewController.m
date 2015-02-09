@@ -339,20 +339,20 @@
         
         [self buildPlacesArrayFromResults:resultObject1];
         
-        /*
-        // If there are more places, trigger another search
-        // NOTE: Google Places API says do not display more than 20 results at a time - so after getting this to work, I commented it out
         
-        resultObject1 = [dict valueForKey:@"next_page_token"];
-        if (resultObject1) {
-            if (![resultObject1 isKindOfClass:[NSString class]]) {
-                NSLog(@"*** ValueForKey:@\"next_page_token\" is not a string - there are no more hits to fetch ***");
-                return;
-            } else {
+        // If there are more places, trigger another search
+        // NOTE: Google Places API says do not display more than 20 results at a time - so after getting this to work, I disabled the feature
+        
+        if (SHOW_AllPagesOfGooglePlaceSearch) {
+            resultObject1 = [dict valueForKey:@"next_page_token"];
+            if (resultObject1 && [resultObject1 isKindOfClass:[NSString class]]) {
                 [self performSelector:@selector(googlePlaceSearch:) withObject:resultObject1 afterDelay:2.0];   // Wait 2 seconds, then issue next search
+            } else {
+                NSLog(@"*** ValueForKey:@\"next_page_token\" is absent or not a string - there are no more hits to fetch ***");
+                return;
             }
         }
-         */
+        //  */
         
     }
 }
