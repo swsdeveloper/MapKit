@@ -59,10 +59,11 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonTapped:)];
     UIBarButtonItem *reloadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadButtonTapped:)];
     
-    self.toolBarArray = [[NSArray alloc] initWithObjects: exitButton, fixedSpace, backButton, fixedSpace,
+    self.toolBarArray = [[NSArray alloc] initWithObjects:backButton, fixedSpace,
                          forwardButton, fixedSpace, cancelButton, reloadButton, nil];
     
     self.navigationItem.leftBarButtonItems=self.toolBarArray;
+    self.navigationItem.rightBarButtonItems=[[NSArray alloc] initWithObjects:exitButton, nil];
     
     self.label = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 5.0, 200, 42)];
     self.label.backgroundColor = [UIColor lightGrayColor];

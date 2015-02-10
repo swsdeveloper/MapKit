@@ -22,7 +22,7 @@
 
 #define SHOW_AllPagesOfGooglePlaceSearch NO
 #define CACHE_Fix NO
-#define MYDEBUG_CaptureWebPage YES
+#define MYDEBUG_CaptureWebPage NO
 
 /*                                 Definitions:
  
