@@ -9,6 +9,8 @@
 #import "SWSWebViewController.h"
 #import "Constants.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIWebView+SWSUIWebView.h"
+#import "WKWebView+SWSWKWebView.h"
 
 
 @implementation SWSWebViewController
@@ -17,9 +19,21 @@
     //NSLog(@"%s", __FUNCTION__);
 
     [super viewDidLoad];
-    _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-    _webView.delegate = self;
-    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    if (NSClassFromString(@"WKWebView")) {
+        _webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+        NSLog(@"Using WKWebView");
+    } else {
+        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        NSLog(@"Using UIWebView");
+    }
+                    
+    [_webView setDelegateViews:self];
+    
+//    _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+//    _webView.delegate = self;
+//    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     [self.view addSubview: _webView];
     
     if (CACHE_Fix) { self.lastUrl = nil; }
@@ -71,7 +85,6 @@
     
     self.navigationItem.title=self.label.text;
 
-
     /*
     // Since `shouldStartLoadWithRequest` only validates when a user clicks on a link, we'll bypass that
     // here and go right to the `NSURLConnection`, which will validate the request, and if good, it will
@@ -95,7 +108,8 @@
     [_webView stopLoading];
     NSURL *url = [NSURL URLWithString:@"about:blank"];
     [_webView loadRequest:[NSURLRequest requestWithURL:url]];
-    _webView.delegate = nil;
+    [_webView setDelegateViews:nil];
+
 }
 
 - (void)loadRequestFromURL:(NSURL*)url {
@@ -132,51 +146,22 @@
     [self.webView reload];
 }
 
-#pragma mark - UIWebView Delegate methods
+#pragma mark - Shared Web View Delegate Methods (for UIWebView and WKWebView)
 
-// This is where you could, intercept HTML requests and route them through NSURLConnection, to see if the server responds successfully
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
-    
-
-    /*
-     // We're only validating links we click on; if we validated that successfully, though, let's just go open it
-    // nb: we're only validating links we click on because some sites initiate additional html requests of
-    // their own, and don't want to get involved in mediating each and every server request; we're only
-    // going to concern ourselves with those links the user clicks on.
-    
-    if (self.validatedRequest || navigationType != UIWebViewNavigationTypeLinkClicked)
-        return YES;
-    
-    // if user clicked on a link and we haven't validated it yet, let's do so
-    
-    self.originalUrl = request.URL;
-    [NSURLConnection connectionWithRequest:request delegate:self];
-    
-    // and if we're validating, don't bother to have the web view load it yet ...
-    // the `didReceiveResponse` will do that for us once the connection has been validated
-    
-    return NO;
-    */
-    
-    if (webView.loading) {  // Don't interrupt webpage if it is in the midst of loading
-        return NO;
-    }
+- (BOOL)shouldStartDecidePolicy:(NSURLRequest *)request {
     return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
-    
-    webView.scrollView.scrollEnabled = TRUE;
-    [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.querySelector('meta[name=viewport]').setAttribute('content', 'width=%d;', false); ", (int)webView.frame.size.width]]; // Use javascript to force display to full webpage width
-    webView.scalesPageToFit = YES;
-    
+- (void)didStartNavigation {
+    [self.webView scrollView].scrollEnabled = TRUE;
+
     // Show spinning activity indicator while webpage is loading
     if (self.loadingView) {
         [self.loadingView setHidden:NO];
     } else {
-        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake((webView.bounds.size.width-80.0)/2.0, (webView.bounds.size.height-80.0)/2.0, 80.0, 80.0)];
+        self.loadingView = [[UIView alloc]initWithFrame:CGRectMake((self.webView.bounds.size.width-80.0)/2.0,
+                                                                   (self.webView.bounds.size.height-80.0)/2.0,
+                                                                   80.0, 80.0)];
         self.loadingView.backgroundColor = [UIColor colorWithWhite:0. alpha:0.6];
         self.loadingView.layer.cornerRadius = 5;
         
@@ -195,9 +180,58 @@
         
         [self.view addSubview:self.loadingView];
     }
+    if (CACHE_Fix) { self.lastUrl = [[self.webView request] URL]; }
+}
 
+- (void)failLoadOrNavigation:(NSURLRequest *)request withError:(NSError *)error {
+    NSLog(@"%s error=%@", __FUNCTION__, [error description]);
+    [self.loadingView setHidden:YES];
+}
 
-    if (CACHE_Fix) { self.lastUrl = [[webView request] URL]; }
+- (void)finishLoadOrNavigation:(NSURLRequest *)request {
+    NSLog(@"%s",__FUNCTION__);
+    [self.loadingView setHidden:YES];
+    
+//    // Debugging: go to website and capture entire contents of page as an ASCII string
+//    if (MYDEBUG_CaptureWebPage) {
+//        NSLog(@"\n*****************************************************************************************************************");
+//        NSURL *requestURL = [[self.webView request] URL];
+//        NSError *error;
+//        NSString *page = [NSString stringWithContentsOfURL:requestURL
+//                                                  encoding:NSASCIIStringEncoding
+//                                                     error:&error];
+//        NSLog(@"URL: %@ returned:\n\n%@", [requestURL absoluteString], page);
+//        NSLog(@"\nURLError: %@", [error description]);
+//        NSLog(@"*****************************************************************************************************************\n");
+//    }
+    
+    self.label.text = [[[self.webView request] URL] absoluteString];
+    self.navigationItem.title=self.label.text;
+    
+    [self.webView setNeedsDisplay];
+}
+
+#pragma mark - UIWebView Delegate methods
+
+// This is where you could, intercept HTML requests and route them through NSURLConnection, to see if the server responds successfully
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
+    
+    if (webView.loading) {  // Don't interrupt webpage if it is in the midst of loading
+        NSLog(@"Not going to load!!!");
+        return NO;
+    }
+    
+    return [self shouldStartDecidePolicy:request];
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView {
+    if (MYDEBUG_UIWebViewDelegate) { NSLog(@"%s", __FUNCTION__); }
+    
+    webView.scalesPageToFit = YES;
+    [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.querySelector('meta[name=viewport]').setAttribute('content', 'width=%d;', false); ", (int)webView.frame.size.width]]; // Use javascript to force display to full webpage width
+    
+    [self didStartNavigation];
 }
 
 // This will be called for 404 errors
@@ -213,29 +247,7 @@
         }
     }
     
-    [self.loadingView setHidden:YES];
-    
-//    [webView stopLoading];
-    
-//    self.validatedRequest = NO; // reset this for the next link the user clicks on
-    
-    // Debugging: go to website and capture entire contents of page as an ASCII string
-    if (MYDEBUG_CaptureWebPage) {
-        NSLog(@"\n*****************************************************************************************************************");
-        NSURL *requestURL = [[webView request] URL];
-        NSError *error;
-        NSString *page = [NSString stringWithContentsOfURL:requestURL
-                                                  encoding:NSASCIIStringEncoding
-                                                     error:&error];
-        NSLog(@"URL: %@ returned:\n\n%@", [requestURL absoluteString], page);
-        NSLog(@"\nURLError: %@", [error description]);
-        NSLog(@"*****************************************************************************************************************\n");
-    }
-    
-    self.label.text = [[[webView request] URL] absoluteString];
-    self.navigationItem.title=self.label.text;
-    
-    [webView setNeedsDisplay];
+    [self finishLoadOrNavigation: [webView request]];
 }
 
 // You will not see this called for 404 errors
@@ -247,12 +259,29 @@
      NSURLErrorTimedOut = -1001
      */
     
-    NSLog(@"%s error=%@", __FUNCTION__, [error description]);
-    
-    [self.loadingView setHidden:YES];
-    
-//    [webView stopLoading];
-    
+    [self failLoadOrNavigation: [webView request] withError: error];
+}
+
+#pragma mark - WKWebView Delegate Methods
+
+- (void) webView: (WKWebView *) webView decidePolicyForNavigationAction: (WKNavigationAction *) navigationAction decisionHandler: (void (^)(WKNavigationActionPolicy)) decisionHandler {
+    decisionHandler([self shouldStartDecidePolicy: [navigationAction request]]);
+}
+
+- (void) webView: (WKWebView *) webView didStartProvisionalNavigation: (WKNavigation *) navigation {
+    [self didStartNavigation];
+}
+
+- (void) webView:(WKWebView *) webView didFailProvisionalNavigation: (WKNavigation *) navigation withError: (NSError *) error {
+    [self failLoadOrNavigation: [webView request] withError: error];
+}
+
+- (void) webView: (WKWebView *) webView didFailNavigation: (WKNavigation *) navigation withError: (NSError *) error {
+    [self failLoadOrNavigation: [webView request] withError: error];
+}
+
+- (void) webView: (WKWebView *) webView didFinishNavigation: (WKNavigation *) navigation {
+    [self finishLoadOrNavigation: [webView request]];
 }
 
 /*

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
+#import "SWSWebViewProvider.h"
 
-@interface SWSWebViewController : UIViewController <UIWebViewDelegate>  //, NSURLConnectionDataDelegate>
+@interface SWSWebViewController : UIViewController <UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate>  //, NSURLConnectionDataDelegate>
 
 @property (assign, nonatomic) BOOL shouldHideStatusBar;
 
@@ -27,8 +29,8 @@
 
 @property (strong, nonatomic) UIView* loadingView;
 
-
-@property (strong, nonatomic) IBOutlet UIWebView *webView;
+//@property (strong, nonatomic) UIWebView *webView;
+@property (nonatomic) UIView <SWSWebViewProvider> *webView;
 
 @property (retain, nonatomic) NSURL *url;
 

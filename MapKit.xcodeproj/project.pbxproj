@@ -12,6 +12,9 @@
 		0A472E771A869D4C009860C2 /* goBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E761A869D4C009860C2 /* goBack.png */; };
 		0A472E791A86A2A7009860C2 /* exit.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A472E781A86A2A7009860C2 /* exit.png */; };
 		0A472E7B1A8874FC009860C2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A472E7A1A8874FC009860C2 /* QuartzCore.framework */; };
+		0A60C8FD1A9292A30019A0A7 /* UIWebView+ SWSUIWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A60C8FC1A9292A30019A0A7 /* UIWebView+ SWSUIWebView.m */; };
+		0A60C9001A9294100019A0A7 /* WKWebView+SWSWKWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A60C8FF1A9294100019A0A7 /* WKWebView+SWSWKWebView.m */; };
+		0A60C9021A92A5D30019A0A7 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A60C9011A92A5D30019A0A7 /* WebKit.framework */; };
 		0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A31A76B7F300AABA37 /* MapKit.framework */; };
 		0A9C96A61A76B85400AABA37 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9C96A51A76B85400AABA37 /* CoreLocation.framework */; };
 		0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8F09E1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m */; };
@@ -50,6 +53,12 @@
 		0A472E761A869D4C009860C2 /* goBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goBack.png; sourceTree = "<group>"; };
 		0A472E781A86A2A7009860C2 /* exit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exit.png; sourceTree = "<group>"; };
 		0A472E7A1A8874FC009860C2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0A60C8F91A9291EB0019A0A7 /* SWSWebViewProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSWebViewProvider.h; sourceTree = "<group>"; };
+		0A60C8FB1A9292A30019A0A7 /* UIWebView+SWSUIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+SWSUIWebView.h"; sourceTree = "<group>"; };
+		0A60C8FC1A9292A30019A0A7 /* UIWebView+ SWSUIWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+ SWSUIWebView.m"; sourceTree = "<group>"; };
+		0A60C8FE1A9294100019A0A7 /* WKWebView+SWSWKWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+SWSWKWebView.h"; sourceTree = "<group>"; };
+		0A60C8FF1A9294100019A0A7 /* WKWebView+SWSWKWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+SWSWKWebView.m"; sourceTree = "<group>"; };
+		0A60C9011A92A5D30019A0A7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		0A9C96A31A76B7F300AABA37 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		0A9C96A51A76B85400AABA37 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		0AA8F09D1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FindSubstringCategory.h"; sourceTree = "<group>"; };
@@ -92,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A60C9021A92A5D30019A0A7 /* WebKit.framework in Frameworks */,
 				0A472E7B1A8874FC009860C2 /* QuartzCore.framework in Frameworks */,
 				0AB9F8AC1A7B58B300A75FAD /* UIKit.framework in Frameworks */,
 				0A9C96A41A76B7F300AABA37 /* MapKit.framework in Frameworks */,
@@ -142,6 +152,11 @@
 				0AC610FD1A70490E00CB1F14 /* SWSMap.m */,
 				0AC610F91A70376400CB1F14 /* SWSLocationManager.h */,
 				0AC610FA1A70376400CB1F14 /* SWSLocationManager.m */,
+				0A60C8F91A9291EB0019A0A7 /* SWSWebViewProvider.h */,
+				0A60C8FB1A9292A30019A0A7 /* UIWebView+SWSUIWebView.h */,
+				0A60C8FC1A9292A30019A0A7 /* UIWebView+ SWSUIWebView.m */,
+				0A60C8FE1A9294100019A0A7 /* WKWebView+SWSWKWebView.h */,
+				0A60C8FF1A9294100019A0A7 /* WKWebView+SWSWKWebView.m */,
 				0AC611021A7199BD00CB1F14 /* SWSWebViewController.h */,
 				0AC611031A7199BD00CB1F14 /* SWSWebViewController.m */,
 				0AC611771A75AA0800CB1F14 /* SWSGeocodedAnnotations.h */,
@@ -196,6 +211,7 @@
 		0AB4203F1A6ED6820078F5F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A60C9011A92A5D30019A0A7 /* WebKit.framework */,
 				0A472E7A1A8874FC009860C2 /* QuartzCore.framework */,
 				0AB9F8AB1A7B58B300A75FAD /* UIKit.framework */,
 				0A9C96A51A76B85400AABA37 /* CoreLocation.framework */,
@@ -309,12 +325,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A472E6F1A8012B9009860C2 /* SWSPlace.m in Sources */,
+				0A60C9001A9294100019A0A7 /* WKWebView+SWSWKWebView.m in Sources */,
 				0AB4201C1A6ED1F20078F5F3 /* SWSViewController.m in Sources */,
 				0AA8F0A21A7AF915003F83F4 /* NSObject+BVJSONStringCategory.m in Sources */,
 				0AA8F0A51A7B52EE003F83F4 /* SWSAnnotationWithImage.m in Sources */,
 				0AC611791A75AA0800CB1F14 /* SWSGeocodedAnnotations.m in Sources */,
 				0AC610FE1A70490E00CB1F14 /* SWSMap.m in Sources */,
 				0AC610FB1A70376400CB1F14 /* SWSLocationManager.m in Sources */,
+				0A60C8FD1A9292A30019A0A7 /* UIWebView+ SWSUIWebView.m in Sources */,
 				0AC6117C1A75B8BA00CB1F14 /* SWSAnnotation.m in Sources */,
 				0AB420191A6ED1F20078F5F3 /* SWSAppDelegate.m in Sources */,
 				0AA8F09F1A7AF8F5003F83F4 /* NSString+FindSubstringCategory.m in Sources */,
