@@ -6,6 +6,10 @@
 //  Copyright (c) 2015 Steven Shatz. All rights reserved.
 //
 
+// Based on: http://floatlearning.com/2014/12/one-webview-to-rule-them-all/
+
+
+
 #import <Foundation/Foundation.h>
 
 

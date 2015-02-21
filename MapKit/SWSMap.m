@@ -394,6 +394,7 @@
     [directionsRequest setSource:[MKMapItem mapItemForCurrentLocation]];
     [directionsRequest setDestination:destItem];
     [directionsRequest setTransportType:self.transportType];
+    directionsRequest.requestsAlternateRoutes = YES;
     
     MKDirections *directions = [[MKDirections alloc] initWithRequest:directionsRequest];
     MKMapView *myMapView = self;    // Not wise to reference self inside a block
@@ -413,11 +414,34 @@
     if (MYDEBUG) { NSLog(@"%s", __FUNCTION__); }
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithOverlay:overlay];
-        [renderer setStrokeColor:[UIColor blueColor]];
+        [renderer setStrokeColor:[self setRouteColor]];
         [renderer setLineWidth:5.0];
         return renderer;
     }
     return nil;
+}
+
+- (UIColor *)setRouteColor {
+    static int a = 0;
+    if (a >= 3) {
+        a = 1;
+    } else {
+        a++;
+    }
+    switch (a) {
+        case 1:
+            return [UIColor blueColor];
+            break;
+        case 2:
+            return [UIColor redColor];
+            break;
+        case 3:
+           return [UIColor purpleColor];
+            break;
+        default:
+            return [UIColor blackColor];
+            break;
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
