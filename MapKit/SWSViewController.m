@@ -85,7 +85,7 @@
     // For testing, set simulator's current location to: 40.7415, -73.989
     
     CLLocationCoordinate2D cameraLocation = [self.swsLocationManager setLocationAtLatitude:turnToTechLocation.latitude - 0.05
-                                                                              andLongitude:turnToTechLocation.longitude - 0.05];   // set for Satellite view
+                                                                            andLongitude:turnToTechLocation.longitude - 0.05];   // set for Satellite view
     
     [self.map setCameraToLookAtLocation:turnToTechLocation fromLocation:cameraLocation andAltitudeInMeters:100.0];
 
@@ -249,7 +249,7 @@
     NSString *googlePlacesURL = @"https://maps.googleapis.com/maps/api/place/";
     NSString *searchType = @"nearbysearch/";
     NSString *outputType = @"json?";
-    NSString *searchRange = [NSString stringWithFormat:@"location=%f,%f&radius=1000",  // &types=food
+    NSString *searchRange = [NSString stringWithFormat:@"location=%f,%f&radius=5000",  // &types=food
                            currentUserLocation.latitude,
                            currentUserLocation.longitude];
     NSString *searchFor = [NSString stringWithFormat:@"&name=%@",trimmedSearchString];
@@ -578,7 +578,8 @@
             placeAnnotation.placeUrl = placeUrl;
             
             [self.map addAnnotation:placeAnnotation];
-            
+            [self.map fitAnnotationsKeepingCenter];
+
             NSLog(@" *** Annotation added to map at %f, %f ***",
                   placeAnnotation.coordinate.latitude,
                   placeAnnotation.coordinate.longitude);
@@ -847,7 +848,7 @@
         default:
             break;
     }
-    [self.map showRouteTo:self.map.destinationPin];
+    [self.map showAllRoutesTo:self.map.destinationPin];
 }
 
 - (IBAction)searchButtonClicked {

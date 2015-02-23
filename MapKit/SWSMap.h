@@ -13,7 +13,10 @@
 @class SWSViewController;
 
 
-@interface SWSMap : MKMapView <MKAnnotation, MKMapViewDelegate, UIPopoverControllerDelegate>
+@interface SWSMap : MKMapView <MKAnnotation, MKMapViewDelegate, UIPopoverControllerDelegate> {
+    
+    int _currentRouteNumber;
+}
 
 @property (strong, nonatomic) SWSViewController *viewController;
 
@@ -45,8 +48,10 @@
 
 - (void)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
 
-- (void)showRouteTo:(MKMapItem *)destItem;
+- (void)showAllRoutesTo:(MKMapItem *)destItem;
 
 - (CLLocationCoordinate2D)currentUserLocation;
+
+- (void)fitAnnotationsKeepingCenter;
 
 @end

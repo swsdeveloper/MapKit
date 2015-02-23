@@ -14,7 +14,7 @@
 // Set DEBUG to YES to enable debugging; NO to disable it
 #define MYDEBUG YES
 
-#define MYDEBUG_MKMapViewDelegate NO
+#define MYDEBUG_MKMapViewDelegate YES
 #define MYDEBUG_GetIcon NO
 #define MYDEBUG_GetPlace NO
 #define MYDEBUG_GetPlaceDetail NO

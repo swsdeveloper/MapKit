@@ -6,12 +6,6 @@
          contextName = "-[SWSViewController processGooglePlaceDetailSearchResults:forID:]:SWSViewController.m">
       </ContextState>
       <ContextState
-         contextName = "-[SWSViewController buildPlacesArrayFromResults:]:SWSViewController.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[SWSViewController updatePlacesArrayFromResult:forID:]:SWSViewController.m">
-      </ContextState>
-      <ContextState
          contextName = "-[SWSViewController updateAnnotationForPlaceAtIndex:]:SWSViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -23,10 +17,30 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[SWSViewController updatePlacesArrayFromResult:forID:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSViewController buildPlacesArrayFromResults:]:SWSViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[SWSViewController updatePlacesArrayURL:forID:]:SWSViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[SWSMap mapView:viewForAnnotation:]:SWSMap.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SWSMap mapView:didAddAnnotationViews:]:SWSMap.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "pinView.pinColor">
+            </PersistentString>
+            <PersistentString
+               value = "pinView.annotation">
+            </PersistentString>
+            <PersistentString
+               value = "pinView.annotation.title">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SWSViewController updatePlacesArrayIcon:forID:]:SWSViewController.m">

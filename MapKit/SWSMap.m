@@ -17,6 +17,11 @@
 #import "SWSPlace.h"
 
 
+@interface SWSMap ()
+
+@end
+
+
 @implementation SWSMap
 
 - (id)initForViewController:(SWSViewController *)myViewController {
@@ -80,8 +85,7 @@
     [self setRegion:region animated: YES];      // Applies the region to the map view (nothing is displayed yet?)
 }
 
-
-#pragma mark MKMapViewDelegate Protocol Methods:
+#pragma mark - MKMapViewDelegate Protocol Methods:
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     if (MYDEBUG_MKMapViewDelegate) { NSLog(@"%s", __FUNCTION__); }
@@ -102,7 +106,13 @@
     
     // Longitude Delta: The amount of east-to-west distance (measured in degrees) to display for the map region. The number of kilometers spanned by a longitude range varies based on the current latitude. For example, one degree of longitude spans a distance of approximately 111 kilometers (69 miles) at the equator but shrinks to 0 kilometers at the poles.
     
-    [self setRegion:region animated:YES];   // Changes currently visible region of map
+    static BOOL initialRegionSet = NO;
+    // Only zoom into user's current location once - when pgm starts; this allows user to scroll map out of region
+    //  (without the view automatically switching back to the user's current location)
+    if (!initialRegionSet) {
+        [self setRegion:region animated:YES];   // Changes currently visible region of map
+        initialRegionSet = YES;
+    }
 }
 
 - (void)mapViewWillStartLocatingUser:(MKMapView *)mapView {
@@ -154,7 +164,42 @@
 }
 
 
-#pragma mark MKAnnotation Protocol Methods:
+// Each time a Google Places annotation is added to map, this method is called.
+// It zooms out to show all the current annotations, but keeps the view centered where the user currently has it placed
+// (from: http://stackoverflow.com/questions/26416587/fitting-annotations-on-a-mkmapview-while-keeping-user-position-centered)
+
+- (void)fitAnnotationsKeepingCenter {
+    NSLog(@"\n%s", __FUNCTION__);
+    
+    CLLocation *centerLocation = [[CLLocation alloc]
+                                  initWithLatitude:self.centerCoordinate.latitude
+                                  longitude:self.centerCoordinate.longitude];
+    
+    // starting distance (do not zoom less than this)
+    CLLocationDistance maxDistance = 350;
+    
+    NSMutableArray *significantAnnotations = [[NSMutableArray alloc] init];
+    for (id annotation in [self annotations]) {
+        if ([annotation isMemberOfClass:[SWSAnnotationWithImage class]]) {
+            [significantAnnotations addObject:annotation];
+        }
+    }
+    if ([significantAnnotations count] < 1) { return; }
+    
+    for (id <MKAnnotation> annotation in significantAnnotations) {
+        CLLocation *annotationLocation = [[CLLocation alloc] initWithLatitude:annotation.coordinate.latitude longitude:annotation.coordinate.longitude];
+        maxDistance = MAX(maxDistance, [centerLocation distanceFromLocation:annotationLocation]);
+    }
+    
+    MKCoordinateRegion fittedRegion = MKCoordinateRegionMakeWithDistance(centerLocation.coordinate, maxDistance * 2, maxDistance * 2);
+    fittedRegion = [self regionThatFits:fittedRegion];
+    fittedRegion.span.latitudeDelta *= 1.2;
+    fittedRegion.span.longitudeDelta *= 1.2;
+    
+    [self setRegion:fittedRegion animated:YES];
+}
+
+#pragma mark - MKAnnotation Protocol Methods:
 
 // mapView:viewForAnnotation: provides the view for each annotation.
 // This method may be called for all or some of the added annotations.
@@ -285,6 +330,7 @@
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
     if (MYDEBUG) { NSLog(@"\n%s", __FUNCTION__); }
+    // [self showAnnotations:significantAnnotations animated:YES];
 }
 
 // mapView:annotationView:calloutAccessoryControlTapped: is called when the user taps on left & right callout accessory UIControls.
@@ -345,7 +391,7 @@
         
         // Create a Direction Request - from current user location to destination pin location
 
-        [self showRouteTo:self.destinationPin];
+        [self showAllRoutesTo:self.destinationPin];
         
     } else if ([control tag] == 5) {
         NSLog(@"Right button of Google Places annotation tapped");
@@ -374,10 +420,10 @@
     [[self.viewController navigationController] pushViewController:webViewController animated:YES];
 }
 
-- (void)showRouteTo:(MKMapItem *)destItem {
+- (void)showAllRoutesTo:(MKMapItem *)destItem {
     if (MYDEBUG) { NSLog(@"%s Name=%@, Lat=%f, Long=%f", __FUNCTION__, destItem.name, destItem.placemark.coordinate.latitude, destItem.placemark.coordinate.longitude); }
     
-    // Create a Direction Request - from current user location to current location of draggable pin
+    // Create a Direction Request - from user's current location to current location of draggable pin or other tapped annotation
     // Before doing so, remove any polyline overlay that may have previously been shown
     
     for (id<MKOverlay> overlayToRemove in self.overlays) {
@@ -400,9 +446,11 @@
     MKMapView *myMapView = self;    // Not wise to reference self inside a block
     [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         if (!error) {
-            for (MKRoute *route in [response routes]) {
+            // Draw routes in opposite order returned, so 1st route gets shown in its entirety
+            NSArray *routeArray = [response routes];
+            for (_currentRouteNumber = (int)[routeArray count]-1; _currentRouteNumber >= 0; _currentRouteNumber--) {
+                MKRoute *route = routeArray[_currentRouteNumber];
                 [myMapView addOverlay:[route polyline] level:MKOverlayLevelAboveRoads]; // Draws the route above roads, but below labels.
-                                                                                        // The |polyline| method returns the geometric route
             }
         }
     }];
@@ -421,27 +469,14 @@
     return nil;
 }
 
+// At Entry: self.currentRouteNumber is index into routeArray
 - (UIColor *)setRouteColor {
-    static int a = 0;
-    if (a >= 3) {
-        a = 1;
-    } else {
-        a++;
-    }
-    switch (a) {
-        case 1:
-            return [UIColor blueColor];
-            break;
-        case 2:
-            return [UIColor redColor];
-            break;
-        case 3:
-           return [UIColor purpleColor];
-            break;
-        default:
-            return [UIColor blackColor];
-            break;
-    }
+    if (_currentRouteNumber == 0) { return [UIColor blueColor]; }
+    if (_currentRouteNumber == 1) { return [UIColor redColor]; }
+    if (_currentRouteNumber == 2) { return [UIColor purpleColor]; }
+    if (_currentRouteNumber == 3) { return [UIColor orangeColor]; }
+    if (_currentRouteNumber == 4) { return [UIColor greenColor]; }
+    return [UIColor blackColor];
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
@@ -465,7 +500,7 @@
         self.destinationPin = [[MKMapItem alloc] initWithPlacemark:placemark];
         self.destinationPin.name = @"Draggable Pin";
         
-        [self showRouteTo:self.destinationPin];
+        [self showAllRoutesTo:self.destinationPin];
     }
     
 // The following code degrades the ability to drag the pin:
@@ -483,7 +518,7 @@
     self.coordinate = newCoordinate;    // new center point for an annotation
 }
 
-#pragma mark UIPopOverController Delegate methods
+#pragma mark - UIPopOverController Delegate methods
 
 // Called on delegate when popover controller will dismiss the popover. Return NO to prevent the dismissal of the view.
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
